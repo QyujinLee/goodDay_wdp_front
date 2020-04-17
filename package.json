@@ -1,0 +1,54 @@
+{
+  "name": "wdp-front",
+  "version": "0.1.0",
+  "private": true,
+  "proxy": "https://besvc.icatchup.co.kr",
+  "dependencies": {
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "axios": "^0.19.2",
+    "chart.js": "^2.9.3",
+    "chartjs-plugin-annotation": "^0.5.7",
+    "immutable": "^4.0.0-rc.12",
+    "moment": "^2.24.0",
+    "react": "^16.12.0",
+    "react-chartjs-2": "^2.9.0",
+    "react-confirm-alert": "^2.6.1",
+    "react-dom": "^16.12.0",
+    "react-html-parser": "^2.0.2",
+    "react-media": "^1.10.0",
+    "react-moment": "^0.9.7",
+    "react-number-picker": "^1.0.5",
+    "react-redux": "^7.2.0",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "3.3.1",
+    "redux": "^4.0.5",
+    "redux-actions": "^2.6.5"
+  },
+  
+  "scripts": {
+    "start": "cross-env NODE_ENV=production NODE_PATH=src react-scripts start",
+    "build": "cross-env NODE_PATH=src react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+   },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.0"
+  }
+}

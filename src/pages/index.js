@@ -1,0 +1,16 @@
+export { default as PointPage } from './PointPage';
+export { default as StepsPage } from './StepsPage';
+export { default as ActivityPage } from './ActivityPage';
+export { default as RecordBodyWeightPage } from './RecordBodyWeightPage';
+export { default as RecordBloodPressurePage } from './RecordBloodPressurePage';
+export { default as RecordBloodSugarPage } from './RecordBloodSugarPage';
+export { default as ShoppingPage } from './ShoppingPage';
+export { default as ReportPage } from './ReportPage';
+export { default as MorePage } from './MorePage';
+export { default as InputBodyAgePage } from './InputBodyAgePage';
+export { default as MindExamPage } from './MindExamPage';
+export { default as MindExamResultPage } from './MindExamResultPage';
+export { default as DetailBodyWeightPage} from './detailBodyWeightPage';
+export { default as DetailBloodPressurePage} from './detailBloodPressurePage';
+export { default as DetailBloodSugarPage} from './detailBloodSugarPage';
+export { default as MissionPage} from './MissionPage';
