@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 
 class InputBodyAgeWaist extends Component {
+
     render() {
 
         const { inputBodyAge } = this.props; // props data

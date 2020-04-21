@@ -11,6 +11,8 @@ import * as cstts from 'constants/serviceConstants';
 class MissionInterestContainer extends Component {
 
     componentDidMount(){
+        utils.extApp('04');
+
         const {MissionActions,misnSrno, misnDtlSrno} = this.props;
         if(misnSrno === cstts.MISN_DIV_CD_INTEREST){//관삼사 일 경우
             this.getMissionAnswerList({misnDtlSrno: misnDtlSrno}).then((response) => {

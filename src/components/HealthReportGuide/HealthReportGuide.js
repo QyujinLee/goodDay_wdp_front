@@ -21,7 +21,7 @@ class HealthReportGuide extends Component {
                 <div className='link_wrap'>
                     <a href='#!' className='link_txt' onClick={() => {
                         confirmAlert({
-                            customUI: ({onClose}) => (
+                            customUI: ({ onClose }) => (
                                 <Fragment>
                                     <div className='popup_wrap report'>
                                         <div className='title'>비만 나이 검사하기</div>
@@ -79,14 +79,14 @@ class HealthReportGuide extends Component {
                                 <div className='img_box'>
                                     <img src='images/img_info_hdl.png' alt='HDL이미지' />
                                 </div>
-                                <p className='txt'>
-                                    <strong>HDL콜레스테롤</strong>
-                                    <span>
-                                        동맥 안에 달라붙은 <b>나쁜<br />
-                                            콜레스테롤을 수거해서<br />
-                                            동맥경화를 방지</b>해줍니다.
-                                    </span>
-                                </p>
+                                <div className='txt_wrap'>
+                                    <p className='txt'>
+                                        <strong>HDL콜레스테롤</strong>
+                                        <span>
+                                            동맥 안에 달라붙은 <b>나쁜 콜레스테롤을 수거해서 동맥경화를 방지</b>해줍니다.
+                                        </span>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </li>
@@ -97,12 +97,14 @@ class HealthReportGuide extends Component {
                                 <div className='img_box'>
                                     <img src='images/img_info_data.png' alt='보안이미지' />
                                 </div>
-                                <p className='txt'>
-                                    <strong>
-                                        IT 기술의 강력한 보안<br />
-                                        검증과 데이터 암호화
-                                    </strong>
-                                </p>
+                                <div className='txt_wrap'>
+                                    <p className='txt'>
+                                        <strong>체계적인 보안 시스템</strong>
+                                        <span>
+                                            IT 기술의 <b>강력한 보안 검증과 데이터 암호화</b>로 개인정보를 안전하게 보호합니다.
+                                        </span>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </li>

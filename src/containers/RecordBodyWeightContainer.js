@@ -84,7 +84,6 @@ class RecordBodyWeightContainer extends Component {
      */
     changeCharacter(nowScroll) {
 
-        const { weight } = this.props;
         const minX = utils.getScrollPosition(25) ; 
         const maxX = utils.getScrollPosition(120); 
         const hPer = 100 / (maxX - minX); 
@@ -98,7 +97,7 @@ class RecordBodyWeightContainer extends Component {
         const gab = nowScroll - minX;
         let curPer = 1; //현재 체중 percent
         curPer = minPer + ( rangePer / 100 * (gab * hPer));
-        const curW = weight;
+        const curW = utils.getBodyAgeDefaultValue('bodyWeight');
 
         const face = document.querySelector('.face');
         face.classList.remove('thin');

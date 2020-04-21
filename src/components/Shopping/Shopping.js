@@ -12,7 +12,7 @@ class Shopping extends Component {
       
         const ShoppingCommendLayout = [
             {
-                'title': '통장',
+                'title': 'iCatchUp+',
                 'ctgId': ServiceConstants.SHOPPING_CTGID_BANK_BOOK
             },
             {
@@ -50,7 +50,7 @@ class Shopping extends Component {
 
                 <div className='mall_wrap'>
                     <div className='main_banner' onClick={() => onClickGoPage('shoppingGroupBuy')}>
-                    <img src="images/ico_shop_mainbanner.png" alt="쇼핑메인배너" />
+                    <img src='images/ico_shop_mainbanner.png' alt='쇼핑메인배너' />
                     </div>
                     <div className='shop_gnb_wrap'>
                         <ul className='shop_gnb'>
@@ -76,7 +76,7 @@ class Shopping extends Component {
                                             <span className='origin'>포우먼</span>
                                             <span className='name'>종합비타민 포우먼 베티 글루간 1세트 [2개월분]</span>
                                             <p className='price_num'>23,000<span className='cut'><em>25,000</em>
-                            원</span></p>
+                                            원</span></p>
                                             <div className='score_stars'><i className='stars'  style={{ clipPath: 'inset(0 20% 0 0)' }}></i><b className='reply'>(3,901)</b></div>
                                         </div>
 
@@ -88,11 +88,11 @@ class Shopping extends Component {
                                             <img src='images/img_shop_list_04.png' alt='' />
                                         </div>
                                         <div className='info_pro'>
-                                            <span className='origin'>마인드 카페</span>
-                                            <span className='name'>온라인/오프라인 심리상담_Packcage</span>
+                                            <span className='origin'>포프리</span>
+                                            <span className='name'>베타카로틴 1세트 [30정/2병/2개월분]</span>
                                             <p className='price_num'>23,000<span className='cut'><em>25,000</em>
-                            원</span></p>
-                                            <div className='score_stars'><i className='stars' style={{ clippath: 'inset(0 20% 0 0)' }}></i><b className='reply'>(1,901)</b></div>
+                                            원</span></p>
+                                            <div className='score_stars'><i className='stars' style={{ clipPath: 'inset(0 20% 0 0)' }}></i><b className='reply'>(1,901)</b></div>
                                         </div>
 
                                     </a>
@@ -103,13 +103,12 @@ class Shopping extends Component {
                                             <img src='images/img_shop_list_03.png' alt='' />
                                         </div>
                                         <div className='info_pro'>
-                                            <span className='origin'>포우먼</span>
-                                            <span className='name'>종합비타민 포우먼 베티 글루간 1세트 [2개월분]</span>
+                                            <span className='origin'>마망스</span>
+                                            <span className='name'>마망스 엽산600</span>
                                             <p className='price_num'>23,000<span className='cut'><em>25,000</em>
-                            원</span></p>
+                                            원</span></p>
                                             <div className='score_stars'><i className='stars'></i><b className='reply'>(3,901)</b></div>
                                         </div>
-
                                     </a>
                                 </li>
                                 <li>
@@ -121,7 +120,7 @@ class Shopping extends Component {
                                             <span className='origin'>마인드 카페</span>
                                             <span className='name'>온라인/오프라인 심리상담_Packcage</span>
                                             <p className='price_num'>23,000<span className='cut'><em>25,000</em>
-                            원</span></p>
+                                            원</span></p>
                                             <div className='score_stars'><i className='stars' style={{ clipPath: 'inset(0 0 0 0)' }}></i><b className='reply'>(1,901)</b></div>
                                         </div>
 
@@ -155,9 +154,10 @@ class Shopping extends Component {
                                             <img src='images/img_shop_list_03.png' alt='' />
                                         </div>
                                         <div className='info_pro'>
-                                            <span className='origin'>포우먼</span>
-                                            <span className='name'>종합비타민 포우먼 베티 글루간 1세트 [2개월분]</span>
-                                            <p className='price_num'>23,000<span className='cut'><em>25,000</em> 원</span></p>
+                                            <span className='origin'>마망스</span>
+                                            <span className='name'>마망스 엽산600</span>
+                                            <p className='price_num'>23,000<span className='cut'><em>25,000</em>
+                                            원</span></p>
                                             <div className='score_stars'><i className='stars'></i><b className='reply'>(3,901)</b></div>
                                         </div>
 
@@ -169,11 +169,13 @@ class Shopping extends Component {
                                             <img src='images/img_shop_list_04.png' alt='' />
                                         </div>
                                         <div className='info_pro'>
-                                            <span className='origin'>마인드 카페</span>
-                                            <span className='name'>온라인/오프라인 심리상담_Packcage</span>
-                                            <p className='price_num'>23,000<span className='cut'><em>25,000</em> 원</span></p>
-                                            <div className='score_stars'><i className='stars' style={{ clippath: 'inset(0 0 0 0)' }}></i><b className='reply'>(1,901)</b></div>
+                                            <span className='origin'>포프리</span>
+                                            <span className='name'>베타카로틴 1세트 [30정/2병/2개월분]</span>
+                                            <p className='price_num'>23,000<span className='cut'><em>25,000</em>
+                                            원</span></p>
+                                            <div className='score_stars'><i className='stars' style={{ clipPath: 'inset(0 0 0 0)' }}></i><b className='reply'>(1,901)</b></div>
                                         </div>
+
 
                                     </a>
                                 </li>
@@ -191,9 +193,10 @@ class Shopping extends Component {
                                             <img src='images/img_shop_list_03.png' alt='' />
                                         </div>
                                         <div className='info_pro'>
-                                            <span className='origin'>포우먼</span>
-                                            <span className='name'>종합비타민 포우먼 베티 글루간 1세트 [2개월분]</span>
-                                            <p className='price_num'>23,000<span className='cut'><em>25,000</em> 원</span></p>
+                                            <span className='origin'>마망스</span>
+                                            <span className='name'>마망스 엽산600</span>
+                                            <p className='price_num'>23,000<span className='cut'><em>25,000</em>
+                                            원</span></p>
                                             <div className='score_stars'><i className='stars'></i><b className='reply'>(3,901)</b></div>
                                         </div>
 
@@ -205,11 +208,13 @@ class Shopping extends Component {
                                             <img src='images/img_shop_list_04.png' alt='' />
                                         </div>
                                         <div className='info_pro'>
-                                            <span className='origin'>마인드 카페</span>
-                                            <span className='name'>온라인/오프라인 심리상담_Packcage</span>
-                                            <p className='price_num'>23,000<span className='cut'><em>25,000</em> 원</span></p>
-                                            <div className='score_stars'><i className='stars' style={{ clippath: 'inset(0 0 0 0)' }}></i><b className='reply'>(1,901)</b></div>
+                                            <span className='origin'>포프리</span>
+                                            <span className='name'>베타카로틴 1세트 [30정/2병/2개월분]</span>
+                                            <p className='price_num'>23,000<span className='cut'><em>25,000</em>
+                                            원</span></p>
+                                            <div className='score_stars'><i className='stars' style={{ clipPath: 'inset(0 0 0 0)' }}></i><b className='reply'>(1,901)</b></div>
                                         </div>
+
 
                                     </a>
                                 </li>

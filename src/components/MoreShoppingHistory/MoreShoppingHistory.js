@@ -44,8 +44,8 @@ class MoreShoppingHistory extends Component {
                                         <dt className='pro_img'><img src='images/img_shop_list_03.png' alt='' /></dt>
                                         <dd className='pro_info'>
                                             <div className='prd_tit'>
-                                                <span className='c_name'>비타민하우스</span>
-                                                <span>파이토 멀티비타민 포우먼</span>
+                                                <span className='c_name'>마망스</span>
+                                                <span>마망스 엽산600</span>
                                             </div>
                                             <div className='prd_price'>
                                                 <span className='n_price'><b>23,000</b>원 / 1개</span>
@@ -96,8 +96,8 @@ class MoreShoppingHistory extends Component {
                                         <dt className='pro_img'><img src='images/img_shop_list_03.png' alt='' /></dt>
                                         <dd className='pro_info'>
                                             <div className='prd_tit'>
-                                                <span className='c_name'>비타민하우스</span>
-                                                <span>파이토 멀티비타민 포우먼</span>
+                                                <span className='c_name'>마망스</span>
+                                                <span>마망스 엽산600</span>
                                             </div>
                                             <div className='prd_price'>
                                                 <span className='n_price'><b>23,000</b>원 / 1개</span>

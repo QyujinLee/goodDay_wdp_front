@@ -162,12 +162,12 @@ html, body{height:100%;}
 .health_chk_bx{position:relative;}
 .data_set{clear:both;position:fixed;top:62px;left:0px;width:100%;height:49px;padding:15px 20px 15px 30px;vertical-align:middle;box-sizing:border-box;background-color:#fff;border-bottom:1px solid #e8e8e8;z-index:1000;}
 .data_set .recent_data{float:left;width:120px;}
-.recent_data{position:relative;color:#000;font-size:13px;}
+.recent_data{position:relative;color:#000;font-size:14px;}
 .recent_data .sel_data{display:inline-block;margin-top:2px;}
 .recent_data .info_lst{position:absolute;top:0px;left:84px;width:19px;height:19px;background:url(../images/btn_recent.png) center center no-repeat;background-size:100% 100%;vertical-align:middle;z-index:10;}
 .open .info_lst{top:0px;right:10px;background:url(../images/btn_recent_open.png) center center no-repeat;background-size:100% 100%;}
 .recent_data .sel_lst{display:none;width:100%;position:absolute;top:-14px;left:-11px;border:1px solid #e8e8e8;z-index:9;}
-.recent_data .sel_lst li a{display:block;height:20px;padding:15px 5px 5px 10px;background-color:#fff;border-top:1px solid #e8e8e8;color:#000;font-size:13px;word-break:nowrap;}
+.recent_data .sel_lst li a{display:block;height:20px;padding:15px 5px 5px 10px;background-color:#fff;border-top:1px solid #e8e8e8;color:#000;font-size:14px;word-break:nowrap;}
 .recent_data .sel_lst li:first-child a{border-top:none;}
 .recent_data.open .sel_lst{display:block;}
 .tab_txt{overflow:hidden;}
@@ -313,7 +313,7 @@ html, body{height:100%;}
 
 /*레포트-메인*/
 .main_report{padding-top:50px;text-align:center;}
-.main_report .txt{width:183px;color:#4a4a4a;margin:0px auto;font-size:18px;line-height:26px;}
+.main_report .txt{color:#4a4a4a;margin:0px auto;font-size:18px;line-height:26px;}
 .main_report .s_txt{margin-top:15px;color:#4a4a4a;}
 .img_tomato{width:44.16666667%;margin:20px auto 0px auto;}
 .img_tomato img{width:100%;}
@@ -326,18 +326,17 @@ html, body{height:100%;}
 
 
 .desc_lst{margin-top:50px;border-top:15px solid #f4f4f4;}
-.desc_lst li{padding-bottom:42px;}
+.desc_lst li{padding-bottom:50px;}
 .desc_lst li:first-child{padding-bottom:29px;}
 .desc_lst .cont_wrap{padding-top:50px;}
 .desc_lst .img_box{margin-top:20px;}
 .desc_lst li:first-child .cont_wrap{border-top:none;}
-.desc_lst li:last-child{padding-bottom:0px;}
 .chart_sp{padding:0px 16px 0px 16px;}
 .img_desc{overflow:hidden;padding:45px 45px 8px 45px;line-height:100px;}
-.img_desc .img_box{float:left;position:relative;display:block;margin-top:0px;width:120px;height:100px;vertical-align:middle;background-color:#f4f4f4}
-.img_desc .img_box:before{position:absolute;top:0;left:0;content:'';border-bottom: 13px solid transparent;border-left: 13px solid #ff5167;}
-.img_desc .img_box img{width:90px;height:50px;margin:25px auto 0px auto;}
-.img_desc .txt{display:inline-block;width:auto;margin-left:25px;text-align:left;}
+.img_desc .img_box{float:left;position:relative;display:block;margin-top:0px;width:140px;height:140px;vertical-align:middle;}
+.img_desc .img_box img{width:100%;}
+.img_desc .txt_wrap{float:left;display:table;width:46%;height:140px;margin-left:15px;}
+.img_desc .txt{display:table-cell;text-align:left;vertical-align:middle;}
 .img_desc .txt strong{display:block;font-size:14px;}
 .img_desc .txt span{display:block;margin-top:6px;font-size:12px;line-height:19px;font-weight:300;}
 .img_desc .txt b{font-weight:400;}
@@ -426,6 +425,7 @@ html, body{height:100%;}
 
 /*건강검진 나이세부 */
 .detail_compare_wrap{padding:0px 20px 32px 20px;}
+.detail_noti{color:#999;padding:16px 0px 17px 0px;font-size:12px;}
 .detail_age_bx{clear:both;position:relative;padding:30px 0px;min-height:117px;border:1px solid #fafafa;border-radius:6px;background-color:#fafafa;box-sizing:border-box;}
 .detail_age_bx dl{float:left;width:50%;height:57px;box-sizing:border-box;text-align:center;}
 .detail_age_bx dl + dl{padding-right:0px;border-left:1px solid #e8e8e8;}
@@ -538,17 +538,13 @@ html, body{height:100%;}
 .pressure .range_measure,.pressure .measure_num{width:1874px;}
 .measure_num li{float:left;min-width:29px;height:18px;margin-left:170px;color:#999;font-size:16px;}
 .measure_num li:nth-child(2), .measure_num li:last-child{margin-left:120px;}
-
 .weight .measure_num li, .waist .measure_num li, .hip .measure_num li{margin-left:71px;}
 .blood .measure_num li{margin-left:170px;}
 .pressure .measure_num li{margin-left:71px;}
-
 .measure_num li:first-child ,.weight .measure_num li:first-child,.waist .measure_num li:first-child , .hip .measure_num li:first-child,.blood .measure_num li:first-child,.pressure .measure_num li:first-child{margin-left:172px;}
 .weight .measure_num li:nth-child(2),.weight .measure_num li:last-child,.hip .measure_num li:last-child ,.pressure .measure_num li:nth-child(2),.pressure .measure_num li:last-child{margin-left:21px;}
-
 .blood .measure_num li:nth-child(n+7):nth-child(-n+10){margin-left:169px;}
 .blood .measure_num li:nth-child(n+11){margin-left:171px;}
-
 .blood .measure_num li:first-child{margin-left:182px;}
 
 
@@ -954,7 +950,7 @@ html, body{height:100%;}
 .more_menu_wrap{clear:both;border-top:15px solid #f4f4f4;padding:10px 30px 55px 30px;}
 .more_menu_lst{overflow:hidden;width:100%;}
 .more_menu_lst li{float:left;width:33.3333333333%;margin-top:35px;}
-.more_menu_lst li a{display:inline-block;padding-top:40px;height:14px;min-width:75px;background-size:40px 40px;background-position:center 0px;background-repeat:no-repeat;text-align:center;color:#4a4a4a;}
+.more_menu_lst li a{display:inline-block;padding-top:40px;height:24px;min-width:75px;background-size:40px 40px;background-position:center 0px;background-repeat:no-repeat;text-align:center;color:#4a4a4a;}
 .more_menu_lst li a span{display:inline-block;margin-top:8px;letter-spacing:-0.8px;}
 .more_menu_lst li:nth-child(3n + 2){text-align:center;}
 .more_menu_lst li:nth-child(3n + 1){text-align:left;}
@@ -1163,14 +1159,30 @@ html, body{height:100%;}
 .product_lst_wrap .choice_banner{overflow:hidden;margin-top:15px;border:1px solid transparent;border-radius:4px;box-sizing:border-box;}
 
 /*쇼핑상세*/
-.mall_wrap .prd_img_wrap{padding:39px 0px 10px 0px;text-align:center;}
-.mall_wrap .prd_img_wrap .img_box{position:relative;width:224px;margin:0px auto;}
+.detail_shop .prd_img_wrap{padding:39px 0px 10px 0px;text-align:center;}
+.detail_shop .prd_img_wrap .img_box{position:relative;width:224px;margin:0px auto;}
 .prd_img_wrap .img_box .lb{position:absolute;left:-47px;top:-20px;display:inline-block;padding:0px 6px;height:20px;background-color:#ff5167;border-radius:2px;border:1px solid #ff5167;box-sizing:border-box;color:#fff;font-weight:700;font-size:11px;line-height:19px;}
 .prd_img_wrap .img_num{display:inline-block;padding:3px 10px;margin:6px auto 0px auto;border-radius:12px;background-color:#7f7f7f;border:1px solid #7f7f7f;box-sizing:border-box;color:#fff;text-align:center;font-size:12px;}
-.mall_wrap .info_pro{padding:20px;border-top:1px solid #e8e8e8;}
-.mall_wrap .info_pro span{display:block;}
-.mall_wrap .info_pro .origin{color:#666;font-size:13px;}
-.mall_wrap .info_pro .name{font-size:16px;font-weight:700;}
+.detail_shop .info_pro{padding:20px;border-top:1px solid #e8e8e8;}
+.detail_shop .info_pro span{display:block;}
+.detail_shop .info_pro .origin{color:#666;font-size:13px;}
+.detail_shop .info_pro .name{margin-top:8px;font-size:16px;font-weight:700;}
+.detail_shop .info_pro .score_stars{background:url(../images/ico_detail_star_all_off.png) 0px 0px no-repeat;padding-left:70px;background-size:70px 13px;color:#666;font-size:13px;}
+.detail_shop .info_pro .score_stars .stars{width:70px;height:13px;background:url(../images/ico_detail_star_all_on.png) 0px 0px no-repeat;background-size:100%;}
+.score_stars .reply .num{font-weight:700;}
+.detail_shop .info_pro .price_num{margin-top:20px;font-size:26px;font-weight:700;vertical-align:bottom;}
+.detail_shop .info_pro .price_num span{display:inline-block;font-size:14px;font-weight:400;vertical-align:middle;}
+.detail_shop .info_pro .price_num .price{}
+.detail_shop .info_pro .price_num .cut{color:#999;}
+.detail_shop .info_pro .price_num .cut em{text-decoration:stroke;}
+.detail_shop .noti_list{padding:20px;border-top:#e8e8e8;}
+.detail_shop .noti_list li{color:#999;line-height:28px;font-size:13px;}
+.detail_shop .noti_list li span{float:left;display:block;}
+.detail_shop .noti_list li .tit{min-width:58px;}
+.detail_shop .noti_list li .cont{float:left;min-width:169px;padding-left:20px;}
+
+
+
 
 /*건강통장*/
 .health_bank_bx{padding:20px 20px 0px 20px;}
@@ -1206,7 +1218,7 @@ html, body{height:100%;}
 .order_lst .pro_img{float:left;width:100px;height:89px;}
 .order_lst .pro_info{float:left;margin-left:25px;}
 .order_lst .pro_info span{display:block;color:#4a4a4a;}
-.pro_info .prd_tit{width:46vw;}
+.pro_info .prd_tit{min-width:176px;}
 .pro_info .prd_tit .c_name{margin-bottom:5px;color:#999;font-size:12px;}
 .pro_info .prd_price{margin-top:25px;}
 .pro_info .prd_price .n_price{display:inline-block;font-size:12px;}

@@ -34,10 +34,10 @@ class MoreProfileInfo extends Component {
                                 <dd>{undefined !== myPoint.avlbPnt ? utils.comma(myPoint.avlbPnt) : '0'} <em className='txt_p'>P</em></dd>
                             </dl>
                         </div>
-                        <div className='level_bx' onClick={() => onClickGoPage('membershipLevel')}>
+                        <div className='level_bx' >
                             <div className={utils.getLevelClassName(myInfo)}></div>
                             <div className='level_benefit'>
-                                <a className='benefit_link' href='#!'>회원 등급 혜택</a>
+                                <a className='benefit_link' href='#!' onClick={() => onClickGoPage('membershipLevel')}>회원 등급 혜택</a>
                                 <div className='detail_lst'>
                                     <span>전상품 할인 <b className='per'>{utils.getLevelDiscountAccumulation(level, 'Discount')}%</b></span>
                                     <span>상시적립 <b className='per'>{utils.numberFixed(utils.getLevelDiscountAccumulation(level, 'Accumulation'))}%</b></span>

@@ -41,6 +41,8 @@ class InputBodyAgeContainer extends Component {
 
     componentDidUpdate(prevProps, prevState) {
 
+        
+
         const prevBodyAge = prevProps.inputBodyAge;
         const nextBodyAge = this.props.inputBodyAge;
         const prevAgeType = prevBodyAge.get('ageType');
@@ -61,84 +63,9 @@ class InputBodyAgeContainer extends Component {
             } 
 
             value = nextBodyAge.get(type) === '' ? utils.getBodyAgeDefaultValue(type) : Number(nextBodyAge.get(type));
-            document.querySelector('.h_range_slider').scrollLeft = utils.getScrollPosition(value)
+            document.querySelector('.h_range_slider').scrollLeft = utils.getScrollPosition(value);
+
         } 
-    }
-
-    /**
-     * nowScroll 값 구하기 메소드
-     * @param prevBodyAge 
-     * @param nextBodyAge 
-     * @param nextAgeType 
-     */
-    getNowScroll(prevBodyAge, nextBodyAge, nextAgeType) {
-
-        let nowScroll;
-        let maxHeight;
-        let maxMoveX;
-
-        if ('height' === nextAgeType) {
-
-            // 역 계산
-            maxHeight = 300;
-            maxMoveX = 1225;
-            const moveRange = maxHeight / maxMoveX;
-            nowScroll = nextBodyAge.get('height') / moveRange;
-
-        }
-
-        if('weight' === nextAgeType) {
-
-            if('' === prevBodyAge.get('bodyWeight')) {
-
-                nowScroll = 182;
-
-            } else {
-
-                // 역 계산
-                maxHeight = 400;
-                maxMoveX = 1569;
-                const moveRange = maxHeight / maxMoveX;
-                nowScroll = nextBodyAge.get('bodyWeight') / moveRange;
-                
-            }
-        }
-
-        if('waist' === nextAgeType) {
-
-            if('' === prevBodyAge.get('waistCircum')) {
-
-                nowScroll = 74;
-
-            } else {
-
-                // 역 계산
-                maxHeight = 200;
-                maxMoveX = 468;
-                const moveRange = maxHeight / maxMoveX;
-                nowScroll = nextBodyAge.get('waistCircum') / moveRange;
-
-            }
-        }
-
-        if('hip' === nextAgeType) {
-
-            if('' === prevBodyAge.get('hipCircum')) {
-
-                nowScroll = 74;
-
-            } else {
-
-                // 역 계산
-                maxHeight = 250;
-                maxMoveX = 668;
-                const moveRange = maxHeight / maxMoveX;
-                nowScroll = nextBodyAge.get('hipCircum') / moveRange;
-
-            }
-        }
-
-        return nowScroll;
     }
 
     /**
@@ -623,6 +550,8 @@ class InputBodyAgeContainer extends Component {
             }
 
         } else if ('weight' === scrollType) {
+            
+            
 
             const range = utils.getBodyAgeValueRange('bodyWeight');
 
@@ -634,6 +563,7 @@ class InputBodyAgeContainer extends Component {
 
                 this.changeCharacterWeight(nowScroll);
                 this.moveScroll(nowScroll, scrollType);
+
             }
 
         } else if ('waist' === scrollType) {
@@ -648,6 +578,7 @@ class InputBodyAgeContainer extends Component {
 
                 this.changeCharacterWaist(nowScroll);
                 this.moveScroll(nowScroll, scrollType);
+
             }
 
         } else if ('hip' === scrollType) {
@@ -662,6 +593,7 @@ class InputBodyAgeContainer extends Component {
 
                 this.changeCharacterHip(nowScroll);
                 this.moveScroll(nowScroll, scrollType);
+
             }
 
         }
@@ -724,9 +656,9 @@ class InputBodyAgeContainer extends Component {
         const gab = nowScroll - minX;
         let curPer = 1; //현재 체중 percent
         curPer = minPer + (rangePer / 100 * (gab * hPer));
-        const curW = inputBodyAge.get('bodyWeight');
+        const curW = inputBodyAge.get('bodyWeight') === '' ? utils.getBodyAgeDefaultValue('bodyWeight') : inputBodyAge.get('bodyWeight');
 
-        const face = document.querySelector('.face');
+        const face = document.querySelector('.face'); 
         if( curW < 25) {
             face.classList.add('thin');
             curPer = minPer;
@@ -763,45 +695,43 @@ class InputBodyAgeContainer extends Component {
         const minX = utils.getScrollPosition(50); //50cm 이상 스크롤값
         const hPer = 100 / (maxX - minX); //range 퍼센트 환산
         const myHead = document.querySelector('.my_character .head');
-        const tapeLine = document.querySelector('.my_character .tape_line');
-        const curInch = inputBodyAge.get('waistCircum');
+        const curInch = inputBodyAge.get('waistCircum') === '' ? utils.getBodyAgeDefaultValue('waistCircum') : inputBodyAge.get('waistCircum');
         const minPer = 133 / myHead.offsetWidth;
         const maxPer = 222 / myHead.offsetWidth;
         const rangePer = maxPer - minPer;
         const gab = nowScroll - minX;
-        let maginLft = -1 * Number(tapeLine.offsetWidth / 2);
-
+        
         let curPer = 1; /*현재 waist percent*/
         curPer = minPer + (rangePer / 100 * (gab * hPer));
 
         let wPer = curPer * 134;//줄자 크기 134px
         const upperBody = document.getElementsByClassName('upper_body')[0];
 
-        if (curInch < 60) {
-
+        if (curInch < 50) {
             upperBody.classList.add('thin');
-
-            if (curInch < 50) {
-                curPer = minPer;
-                wPer = minPer * 134;
-            }
-
-        } else if (curInch > 80) {
-
-            upperBody.classList.add('obesity');
-            if (curInch > 100) {
-                curPer = maxPer;
-                wPer = maxPer * 134;
-            }
-
+            curPer = minPer;
+            wPer = minPer * 134;
+        } else if (curInch >= 50 && curInch <= 60) {
+            upperBody.classList.add('thin');
         } else if (curInch > 60 && curInch < 81) {
             upperBody.classList.remove('thin');
             upperBody.classList.remove('obesity');
+        } else if (curInch > 80 && curInch <= 100) {
+            upperBody.classList.add('obesity');
+        } else if (curInch > 100) {
+            upperBody.classList.add('obesity');
+            curPer = maxPer;
+            wPer = maxPer * 134;
         }
 
+
         myHead.style.transform = 'scaleX(' + curPer + ')';
+
+        const tapeLine = document.querySelector('.my_character .tape_line');
+        let marginLeft = -1 * Number(134 * curPer / 2);
+
         tapeLine.style.width = wPer + 'px';
-        tapeLine.style.marginLeft = maginLft + 'px';
+        tapeLine.style.marginLeft = marginLeft + 'px';
 
     }
 
@@ -817,38 +747,32 @@ class InputBodyAgeContainer extends Component {
         const minX = utils.getScrollPosition(50); //50cm 이상 스크롤값
         const hPer = 100 / (maxX - minX); //range 퍼센트 환산
         const myHead = document.querySelector('.my_character .head');
-        const tapeLine = document.querySelector('.my_character .tape_line');
         const curInch = utils.getValueByScrollPosition(nowScroll);
         const minPer = 133 / myHead.offsetWidth;
         const maxPer = 222 / myHead.offsetWidth;
         const rangePer = maxPer - minPer;
         const gab = nowScroll - minX;
-        let maginLft = -(tapeLine.offsetWidth / 2);
 
         let curPer = 1; /*현재 waist percent*/
         curPer = minPer + (rangePer / 100 * (gab * hPer));
 
         let wPer = curPer * 134;//줄자 크기 134px
 
-        if (curInch < 60) {
-
-            if (curInch < 50) {
-                curPer = minPer;
-                wPer = minPer * 134;
-            }
-
-        } else if (curInch > 80) {
-
-            if (curInch > 100) {
-                curPer = maxPer;
-                wPer = maxPer * 134;
-            }
-
+        if (curInch < 50) {
+            curPer = minPer;
+            wPer = minPer * 134;
+        } else if (curInch > 100) {
+            curPer = maxPer;
+            wPer = maxPer * 134;
         }
 
         myHead.style.transform = 'scaleX(' + curPer + ')';
+
+        const tapeLine = document.querySelector('.my_character .tape_line');
+        let marginLeft = -(134 * curPer / 2);
+
         tapeLine.style.width = wPer + 'px';
-        tapeLine.style.marginLeft = maginLft + 'px';
+        tapeLine.style.marginLeft = marginLeft + 'px';
 
     }
     /**

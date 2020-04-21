@@ -17,14 +17,14 @@ class BodyAgeGuide extends Component {
                 <div className='img_tomato'>
                     <img src='images/img_report_fat.png' alt='토마토이미지' />
                 </div>
-                <div className='noti'><span className='ico_p'></span>불러오면 <b className='num'>1000P</b>적립</div>
+                <div className='noti'><span className='ico_p'></span>검사하면 <b className='num'>1000P</b>적립</div>
                 <Link to='/report/inputBodyAge'>
                     <button className='bt_red big'><span>비만 나이 검사</span></button>
                 </Link>
                 <div className='link_wrap'>
                     <a href='#!' className='link_txt' onClick={() => {
                         confirmAlert({
-                            customUI: ({onClose}) => (
+                            customUI: ({ onClose }) => (
                                 <Fragment>
                                     <div className='popup_wrap report'>
                                         <div className='title'>건강검진 불러오기</div>
@@ -35,7 +35,7 @@ class BodyAgeGuide extends Component {
                                             <p className='msg'>건강검진 기록이 있다면<br />
                                             10년치 기록을 싹~ 모아서<br />
                                             한눈에 확인할 수 있어요</p>
-                                            <p className='msg_p'><span className='ico_p'></span>검사하면 <b>5,000P</b>적립</p>
+                                            <p className='msg_p'><span className='ico_p'></span>불러오면 <b>5,000P</b>적립</p>
                                             <ul className='pop_btns'>
                                                 <li>
                                                     <button className='btn_middle' onClick={onClose}>
@@ -44,7 +44,7 @@ class BodyAgeGuide extends Component {
                                                 </li>
                                                 <li>
                                                     <button className='btn_middle_red' onClick={onHealthReportLoad}>
-                                                        <span>검사하기</span>
+                                                        <span>불러오기</span>
                                                     </button>
                                                 </li>
                                             </ul>
@@ -85,12 +85,13 @@ class BodyAgeGuide extends Component {
                                 <div className='img_box'>
                                     <img src='images/img_info_data.png' alt='보안이미지' />
                                 </div>
-                                <p className='txt'>
-                                    <strong>
-                                        IT 기술의 강력한 보안<br />
-                                        검증과 데이터 암호화
-                                    </strong>
-                                </p>
+                                <div className='txt_wrap'>
+                                    <p className='txt'>
+                                        <span>
+                                            IT 기술의 <b>강력한 보안 검증과 데이터 암호화</b>로 개인정보를 안전하게 보호합니다.
+                                        </span>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </li>
