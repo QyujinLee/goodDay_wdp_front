@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { confirmAlert } from 'react-confirm-alert';
 
 import RecordBodyWeight from 'components/RecordBodyWeight';
 
@@ -169,26 +168,24 @@ class RecordBodyWeightContainer extends Component {
     handleResetWeightValue = () => {
         const { RecordBodyWeightActions, prevVal } = this.props;
 
-        confirmAlert({
-            title: '몸무게 입력',
-            message: '몸무게 입력을 종료할까요?',
-            buttons: [
-                { label: '종료', onClick: () => {
-                        // 체중 값 set
-                        RecordBodyWeightActions.setRecordBodyWeight({
-                            weight: ''
-                        });
-                        
-                        if('' === prevVal) {
-                            window.location.href = '/activity';
-                        } else {
-                            window.location.href = '/activity/detailBodyWeight';
-                        }
-                    }
-                },
-                { label: '취소', onClick: () => null }
-            ]
-        });
+        const title = '몸무게 입력';
+        const msg = '몸무게 입력을 종료할까요?';
+        const btnType = 'end';
+        const callback = function(){
+            // 체중 값 set
+            RecordBodyWeightActions.setRecordBodyWeight({
+                weight: ''
+            });
+            
+            if('' === prevVal) {
+                window.location.href = '/activity';
+            } else {
+                window.location.href = '/activity/detailBodyWeight';
+            }
+        }
+
+        utils.showAlert(title, msg, btnType, callback);
+
     }
 
     /**
@@ -199,25 +196,21 @@ class RecordBodyWeightContainer extends Component {
 
         const {weight, inputType, prevVal} = this.props;
 
+        const title = '몸무게 입력';
+        const btnType = 'end';
+        let msg = '';
+
         if(weight > 200) {
 
-            confirmAlert({
-                title: '몸무게 입력',
-                message: '몸무게는 200kg를 초과할 수 없습니다',
-                buttons: [
-                    { label: '확인', onClick: () => null }
-                ]
-            });
+            msg = '몸무게는 200kg를 초과할 수 없습니다';
+
+            utils.showAlert(title, msg, btnType);
 
         } else if(weight < 10){
 
-            confirmAlert({
-                title: '몸무게 입력',
-                message: '몸무게는 10kg 미만일 수 없습니다',
-                buttons: [
-                    { label: '확인', onClick: () => null }
-                ]
-            });
+            msg = '몸무게는 10kg 미만일 수 없습니다';
+
+            utils.showAlert(title, msg, btnType);
 
         } else {
 
@@ -280,15 +273,13 @@ class RecordBodyWeightContainer extends Component {
      * @returns {void}
      */
     handleClickRemoveBtn = () => {
-        
-        confirmAlert({
-            title: '삭제확인',
-            message: '정말 삭제하시겠습니까?',
-            buttons: [
-                { label: '삭제', onClick: () => { this.RemoveWeightValue() } },
-                { label: '취소', onClick: () => null }
-            ]
-        });
+
+        const title = '삭제 확인';
+        const msg = '정말 삭제하시겠습니까?';
+        const btnType = 'remove';
+        const callback = this.RemoveWeightValue;
+
+        utils.showAlert(title, msg, btnType, callback);
         
     }
 

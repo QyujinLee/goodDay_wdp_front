@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { confirmAlert } from 'react-confirm-alert';
 
 import RecordBloodPressure from 'components/RecordBloodPressure';
 
@@ -175,32 +174,29 @@ class RecordBloodPressureContainer extends Component {
     handleResetBloodPressureValue = () => {
         const { RecordBloodPressureActions, prevVal } = this.props;
 
-        confirmAlert({
-            title: '혈압 입력',
-            message: '혈압 입력을 종료할까요?',
-            buttons: [
-                { label: '종료', onClick: () => {
+        const title = '혈압 입력';
+        const msg = '혈압 입력을 종료할까요?';
+        const btnType = 'end';
+        const callback = function(){
+            // 수축기 값 set
+            RecordBloodPressureActions.setRecordBloodPressureSystolic({
+                bloodPressureSystolic: ''
+            });
 
-                        // 수축기 값 set
-                        RecordBloodPressureActions.setRecordBloodPressureSystolic({
-                            bloodPressureSystolic: ''
-                        });
+            // 이완기 값 set
+            RecordBloodPressureActions.setRecordBloodPressureDiastolic({
+                bloodPressureDiastolic: ''
+            });
+            
+            if('' === prevVal) {
+                window.location.href = '/activity';
+            } else {
+                window.location.href = '/activity/detailBloodPressure';
+            }
+        }
 
-                        // 이완기 값 set
-                        RecordBloodPressureActions.setRecordBloodPressureDiastolic({
-                            bloodPressureDiastolic: ''
-                        });
-                        
-                        if('' === prevVal) {
-                            window.location.href = '/activity';
-                        } else {
-                            window.location.href = '/activity/detailBloodPressure';
-                        }
-                    }
-                },
-                { label: '취소', onClick: () => null }
-            ]
-        });
+        utils.showAlert(title, msg, btnType, callback);
+
     }
 
     /**
@@ -216,15 +212,16 @@ class RecordBloodPressureContainer extends Component {
         const bloodPressureDiastolic = bloodPressure.get('bloodPressureDiastolic');
 
         const title = '혈압 입력';
+        const btnType = 'end';
         let valid = false;
         if(bloodPressureSystolic < range.min){
-            this.showAlert(title,'수축기는 '+ range.min + 'mmHg 미만일 수 없습니다.');
+            utils.showAlert(title,'수축기는 '+ range.min + 'mmHg 미만일 수 없습니다.', btnType);
         } else if(bloodPressureSystolic > range.max){
-            this.showAlert(title,'수축기는 '+ range.max + 'mmHg를 초과할 수 없습니다.');
+            utils.showAlert(title,'수축기는 '+ range.max + 'mmHg를 초과할 수 없습니다.', btnType);
         } else if(bloodPressureDiastolic < range.min){
-            this.showAlert(title,'이완기는 '+ range.min + 'mmHg 미만일 수 없습니다.');
+            utils.showAlert(title,'이완기는 '+ range.min + 'mmHg 미만일 수 없습니다.', btnType);
         } else if(bloodPressureDiastolic > range.max){
-            this.showAlert(title,'이완기는 '+ range.max + 'mmHg를 초과할 수 없습니다.');
+            utils.showAlert(title,'이완기는 '+ range.max + 'mmHg를 초과할 수 없습니다.', btnType);
         } else {
             valid = true;
         }
@@ -297,18 +294,12 @@ class RecordBloodPressureContainer extends Component {
      */
     handleClickRemoveBtn = () => {
 
-        confirmAlert({
-            childrenElement: () => (
-                <Fragment>
-                    <h1>삭제확인</h1>
-                    <p className='msg'>최근 혈압을<br />정말 삭제하시겠습니까?</p>
-                </Fragment>
-            ),
-            buttons: [
-                { label: '삭제', onClick: () => { this.RemoveBloodPressureValue() } },
-                { label: '취소', onClick: () => null }
-            ]
-        });
+        const title = '삭제 확인';
+        const msg = '최근 혈압을<br/>정말 삭제하시겠습니까?';
+        const btnType = 'remove';
+        const callback = this.RemoveBloodPressureValue;
+
+        utils.showAlert(title, msg, btnType, callback);
 
     }
 
@@ -384,20 +375,6 @@ class RecordBloodPressureContainer extends Component {
         );
     }
 
-    /**
-     * 경고 팝업 생성
-     * @param title 
-     * @param msg 
-     */
-    showAlert(title, msg) {
-        confirmAlert({
-            title: title,
-            message: msg,
-            buttons: [
-                { label: '확인', onClick: () => null }
-            ]
-        });
-    }
     render() {
 
         const { bloodPressure, prevVal } = this.props;

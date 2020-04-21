@@ -74,6 +74,13 @@ class RecordBloodSugarContainer extends Component {
 
         let active = true; //현재 스크롤여부
         const nowScroll = e.target.scrollLeft;
+
+        const num = 0.1;
+        const valueRange = utils.getBodyAgeValueRange('bloodSugar'); // 값 범위
+
+        if(utils.getValueByScrollPosition(nowScroll, num) > valueRange.max) {
+            document.querySelector('.h_range_slider').scrollLeft = utils.getScrollPosition(valueRange.max, num);
+        }
         
         this.displayValue(nowScroll);
         this.activeRuler(active);
@@ -127,26 +134,23 @@ class RecordBloodSugarContainer extends Component {
     handleResetBloodSugarValue = () => {
         const { RecordBloodSugarActions, prevVal1, prevVal2 } = this.props;
 
-        confirmAlert({
-            title: '혈당 입력',
-            message: '혈당 입력을 종료할까요?',
-            buttons: [
-                { label: '종료', onClick: () => {
-                        // 혈당 값 set
-                        RecordBloodSugarActions.setRecordBloodSugar({
-                            bloodSugar: ''
-                        });
-                        
-                        if('' === prevVal1 && '' === prevVal2) {
-                            window.location.href = '/activity';
-                        } else {
-                            window.location.href = '/activity/detailBloodSugar';
-                        }
-                    }
-                },
-                { label: '취소', onClick: () => null }
-            ]
-        });
+        const title = '혈당 입력';
+        const msg = '혈당 입력을 종료할까요?';
+        const btnType = 'end';
+        const callback = function(){
+            // 혈당 값 set
+            RecordBloodSugarActions.setRecordBloodSugar({
+                bloodSugar: ''
+            });
+            
+            if('' === prevVal1 && '' === prevVal2) {
+                window.location.href = '/activity';
+            } else {
+                window.location.href = '/activity/detailBloodSugar';
+            }
+        }
+
+        utils.showAlert(title, msg, btnType, callback);
 
     }
 
@@ -209,11 +213,12 @@ class RecordBloodSugarContainer extends Component {
         const bloodSugarVal = bloodSugar.get('bloodSugar');
 
         const title = '혈당 입력';
+        const btnType = 'end';
         let valid = false;
         if(bloodSugarVal < range.min){
-            this.showAlert(title,'혈당은 '+ range.min + 'mmHg 미만일 수 없습니다.');
+            utils.showAlert(title,'혈당은 '+ range.min + 'mmHg 미만일 수 없습니다.', btnType);
         } else if(bloodSugarVal > range.max){
-            this.showAlert(title,'혈당은 '+ range.max + 'mmHg를 초과할 수 없습니다.'); 
+            utils.showAlert(title,'혈당은 '+ range.max + 'mmHg를 초과할 수 없습니다.', btnType); 
         } else {
             valid = true;
         }
@@ -242,19 +247,25 @@ class RecordBloodSugarContainer extends Component {
         if('' === bloodSugar.get('mealYn')) {
 
             confirmAlert({
-                childrenElement: () => (
-                    <Fragment>
-                        <h1>공복/식후를 선택하세요</h1>
-                        <p className='msg' style={{'fontWeight':'bold'}}>공복이란?</p>
-                        <p className='msg'>기상 후 1시간 이내 또는<br/>식사 후 2시간 이상 경과한 경우</p>
-                        <br/>
-                        <p className='msg' style={{'fontWeight':'bold'}}>식후란?</p>
-                        <p className='msg'>식사 후 2시간 이내인 경우</p>
-                    </Fragment>
-                ),
-                buttons: [
-                    { label: '닫기', onClick: () => null }
-                ]
+                customUI : ({onClose}) => (
+                    <div className='popup_wrap report'>
+                        <div className='title'>공복/식후를 선택하세요</div>
+                        <div className='pop_conts'>
+                            <p className='msg' style={{'fontWeight':'bold'}}>공복이란?</p>
+                            <p className='msg'>기상 후 1시간 이내 또는<br/>식사 후 2시간 이상 경과한 경우</p>
+                            <br/>
+                            <p className='msg' style={{'fontWeight':'bold'}}>식후란?</p>
+                            <p className='msg'>식사 후 2시간 이내인 경우</p>
+                            <ul className='pop_btns'>
+                                <li>
+                                    <button className='btn_middle_red' onClick={onClose}>
+                                        <span>확인</span>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                )
             });
 
         } else {
@@ -316,18 +327,12 @@ class RecordBloodSugarContainer extends Component {
      */
     handleClickRemoveBtn = () => {
 
-        confirmAlert({
-            childrenElement: () => (
-                <Fragment>
-                    <h1>삭제확인</h1>
-                    <p className='msg'>최근 혈당을<br />정말 삭제하시겠습니까?</p>
-                </Fragment>
-            ),
-            buttons: [
-                { label: '삭제', onClick: () => { this.RemoveBloodSugarValue() } },
-                { label: '취소', onClick: () => null }
-            ]
-        });
+        const title = '삭제 확인';
+        const msg = '최근 혈당을<br/>정말 삭제하시겠습니까?';
+        const btnType = 'remove';
+        const callback = this.RemoveBloodSugarValue;
+
+        utils.showAlert(title, msg, btnType, callback);
 
     }
 
@@ -403,19 +408,6 @@ class RecordBloodSugarContainer extends Component {
         return await Promise.all(
             [api.deleteInputPhrDataAPI(param)]
         );
-    }
-
-    /**
-     * 경고 팝업 생성
-     */
-    showAlert(title, msg) {
-        confirmAlert({
-            title: title,
-            message: msg,
-            buttons: [
-                { label: '확인', onClick: () => null }
-            ]
-        });
     }
 
     render() {

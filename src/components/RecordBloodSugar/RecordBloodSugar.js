@@ -92,8 +92,8 @@ class RecordBloodSugar extends Component {
                             <span>{bloodSugar}</span>
                         </div>
                         <div className='h_range_slider' onScroll={onRecordBloodSugarScroll}>
-                            <div className='range_measure'>
-                                <ul className='measure_num'>
+                            <div className='range_measure' style={{'width':'5453px'}}>
+                                <ul className='measure_num' style={{'width':'5453px'}}>
                                     <li>0</li>
                                     <li>20</li>
                                     <li>40</li>

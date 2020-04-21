@@ -27,15 +27,23 @@ class HealthReportHistoryContainer extends Component {
         if (0 === Number(healthReport.bwCnt)) {
 
             confirmAlert({
-                childrenElement: () => (
+                customUI: ({onClose}) => (
                     <Fragment>
-                        <h1>알림</h1>
-                        <p className='msg'>해당 {healthReport.mediExamDivNm} 검진 기록은<br />건강보험공단으로부터<br />상세정보를 제공받지 못합니다.</p>
+                        <div className='popup_wrap'>
+                            <div className='title'>알림</div>
+                            <div className='pop_conts'>
+                            <p className='msg'>해당 {healthReport.mediExamDivNm} 검진 기록은<br />건강보험공단으로부터<br />상세정보를 제공받지 못합니다.</p>
+                                <ul className='pop_btns'>
+                                    <li>
+                                        <button className='btn_middle' onClick={onClose}>
+                                            <span>확인</span>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </Fragment>
-                ),
-                buttons: [
-                    { label: '확인', onClick: () => null }
-                ]
+                )
             });
         }
 

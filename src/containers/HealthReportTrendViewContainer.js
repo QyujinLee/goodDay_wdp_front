@@ -311,8 +311,7 @@ class HealthReportTrendViewContainer extends Component {
                                                         ServiceConstants.MEDI_EXAM_ITM_DIV_CD_URINE_LEFT_HEARING === innerItem.mediExamItmDivCd ||
                                                             ServiceConstants.MEDI_EXAM_ITM_DIV_CD_URINE_RIGHT_HEARING === innerItem.mediExamItmDivCd ||
                                                             ServiceConstants.MEDI_EXAM_ITM_DIV_CD_URINE_PROTEIN === innerItem.mediExamItmDivCd ||
-                                                            ServiceConstants.MEDI_EXAM_ITM_DIV_CD_TUBERCULOSIS === innerItem.mediExamItmDivCd ||
-                                                            ServiceConstants.MEDI_EXAM_ITM_DIV_CD_OSTEOPOROSIS === innerItem.mediExamItmDivCd ? (
+                                                            ServiceConstants.MEDI_EXAM_ITM_DIV_CD_TUBERCULOSIS === innerItem.mediExamItmDivCd  ? (
                                                                 <Fragment>
                                                                     {this.getDetailText(innerItem.data)}
                                                                     <ul className={'cir_chart type' + length}>

@@ -83,7 +83,7 @@ class HealthReportDetailView extends Component {
         let left = 0;
         let scopeTerm = 0;
         let scopeTermNormal = 0;
-        let userValue = value;
+        let userValue = Math.abs(value);
         const scopeLength = scope.length;
 
         //화면 비율에 맞는 left값을 조정하기 위한 설정 
@@ -94,7 +94,7 @@ class HealthReportDetailView extends Component {
         scope.forEach(element => {
 
             scopeTermNormal = (ServiceConstants.REF_NCL_DIV_CD_NORMAL === element.refNclDivCd && undefined !== element.endVal ? element.endVal - element.strVal : element.strVal);
-            scopeTerm = (ServiceConstants.REF_NCL_DIV_CD_CAUTION === element.refNclDivCd ? element.endVal - element.strVal : element.strVal);
+            scopeTerm = (ServiceConstants.REF_NCL_DIV_CD_CAUTION === element.refNclDivCd ? Math.abs(element.endVal) - Math.abs(element.strVal) : Math.abs(element.strVal));
 
             /* eslint-disable*/
             if (eval(element.strVal + element.strSymbNm + userValue)
@@ -113,6 +113,9 @@ class HealthReportDetailView extends Component {
                         if (scopeTermNormal !== 0) {
                             left = 40 + ((userValue - element.strVal) / (scopeTermNormal)) * ((Totalbar / scopeLength));
                         }
+                        if(0>element.strVal){
+                            left = (40 + (Math.abs(userValue) / Math.abs(element.strVal)) * Totalbar / scopeLength);
+                        }
                     }
 
                 } else if (ServiceConstants.REF_NCL_DIV_CD_CAUTION === element.refNclDivCd) {
@@ -127,7 +130,9 @@ class HealthReportDetailView extends Component {
                     left = ((((Totalbar / scopeLength) * (scopeLength - 1)) + 40) + (userValue - (element.strVal)) / (scopeTerm) * Totalbar / scopeLength);
                     if ('>=' === element.strSymbNm || '>' === element.strSymbNm) {
                         left = ((((Totalbar / scopeLength) * (scopeLength - 1)) + 40) + ((element.strVal) - userValue) / (scopeTerm) * Totalbar / scopeLength);
-
+                        if(0>element.strVal){
+                            left = ((((Totalbar / scopeLength) * (scopeLength - 1)) + 40) + (Math.abs(userValue) - Math.abs(element.strVal)) / (scopeTerm) * Totalbar / scopeLength);
+                        }
                     }
                 }
             }
@@ -229,10 +234,6 @@ class HealthReportDetailView extends Component {
                 </div>
             );
 
-            //  폐질환, 골다공증 차트 제외
-            if (ServiceConstants.MEDI_EXAM_ITM_DIV_CD_OSTEOPOROSIS === contents.mediExamItmDivCd[0]) {
-                mediExamChartArea = null;
-            }
 
         } else if (2 === examination.length) {
 

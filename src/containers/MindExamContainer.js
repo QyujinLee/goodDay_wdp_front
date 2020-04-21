@@ -39,50 +39,52 @@ class MindExamContainer extends Component {
         this.moveQuestion(qustItmNo + 1);
         // this.moveQuestion(18);
     }
+    
     handleClickBack = (e) => {
         const { qustItmNo, MindExamActions } = this.props;
         MindExamActions.setQustItmNo(qustItmNo === 0 ? 0 : qustItmNo - 1);
     }
+
     handleClickClose = (e) => {
         const { misnSrno, MindExamActions } = this.props;
 
-        let alertCtt = '';
-        let closeAction = function(){};
-
         if(undefined !== misnSrno && '' !== misnSrno) {
 
-            alertCtt = (<Fragment>
-                            <h1>미션</h1>
-                            <p className='msg'>미션을 종료할까요?</p>
-                        </Fragment>);
-            
-            closeAction = function(){
-                // 앱 메인 페이지로 이동
-                utils.extApp('02')
-            };
+            const title = '미션';
+            const msg = '미션을 종료할까요?';
+            const btnType = 'end';
+            const callback = function(){
+                utils.extApp('02');
+            }
+
+            utils.showAlert(title, msg, btnType, callback);
             
         } else {
 
-            alertCtt = (<Fragment>
-                            <h1>마음건강 진단하기</h1>
+            confirmAlert({
+                customUI : ({onClose}) => (
+                    <div className='popup_wrap'>
+                        <div className='title'>마음건강 진단하기</div>
+                        <div className='pop_conts'>
                             <p className='msg'>마음건강 진단을 종료할까요?<br />언제든 다시 시작할 수 있어요.</p>
-                        </Fragment>);
-
-            closeAction = function(){
-                MindExamActions.initSrvData();
-            };
+                            <ul className='pop_btns'>
+                                <li>
+                                    <button className='btn_middle' onClick={()=>{MindExamActions.initSrvData(); onClose();}}>
+                                        <span>종료</span>
+                                    </button>
+                                </li>
+                                <li>
+                                    <button className='btn_middle_red' onClick={onClose}>
+                                        <span>취소</span>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                )
+            });
 
         }
-
-        confirmAlert({
-            childrenElement: () => (
-                alertCtt
-            ),
-            buttons: [
-                { label: '종료', onClick: () => { closeAction() } },
-                { label: '취소', onClick: () => null }
-            ]
-        });
     }
 
     moveQuestion = (nextQustItmNo) => {

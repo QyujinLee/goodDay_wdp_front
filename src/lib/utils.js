@@ -1,3 +1,6 @@
+import React from 'react';
+import { confirmAlert } from 'react-confirm-alert';
+
 import moment from 'moment';
 
 import * as android from 'lib/android';
@@ -200,9 +203,9 @@ export function getLineChartInfo(str) {
 
     if (undefined === str || '정상' === str) {
         return { 'color': 'rgb(109, 212, 0)', 'lineColor': 'rgb(109, 212, 0, 0.5)', 'class': 'normal' };
-    } else if ('주의' === str || '비만' === str) {
+    } else if ('주의' === str || '비만' === str || '골다소증' === str) {
         return { 'color': 'rgb(250, 185, 0)', 'lineColor': 'rgb(250, 185, 0, 0.5)', 'class': 'caution' };
-    } else if ('위험' === str || '고도비만' === str) {
+    } else if ('위험' === str || '고도비만' === str || '골다공증' === str) {
         return { 'color': 'rgb(224, 32, 32)', 'lineColor': 'rgb(224, 32, 0, 0.5)', 'class': 'danger' };
     } else {
         return { 'color': 'rgb(109, 212, 0)', 'lineColor': 'rgb(109, 212, 0, 0.5)', 'class': '' };
@@ -612,4 +615,74 @@ export function validBodyAgeFloat(type, oriValue, element){
     
     element.target.value = curValue;
     return curValue;
+}
+
+/**
+ * 종료 팝업 나타내기
+ * @param title 
+ * @param msg 
+ */
+export function showAlert(title, msg, btnType, callback) {
+
+    let msgArr = [];
+    let brFlag = false;
+
+    if(msg.indexOf('<br/>') !== -1) {
+        msgArr = msg.split('<br/>');
+        brFlag = true;
+    }
+
+    if(undefined !== callback) { // 버튼이 두 개 이며 콜백함수가 있는 경우 (<br/>이 두 개 이상인 경우는 배제)
+
+        confirmAlert({
+            customUI : ({onClose}) => (
+                <div className='popup_wrap'>
+                    <div className='title'>{title}</div>
+                    <div className='pop_conts'>
+                        {!brFlag ? (
+                            <p className='msg'>{msg}</p>
+                        ) : (
+                            <p className='msg'>{msgArr[0]}<br/>{msgArr[1]}</p>
+                        )
+                        
+                        }
+                        <ul className='pop_btns'>
+                            <li>
+                                <button className='btn_middle' onClick={callback}>
+                                <span>{'remove' === btnType ? '삭제' : '종료'}</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button className='btn_middle_red' onClick={onClose}>
+                                    <span>취소</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            )
+        });
+
+    } else { // 확인 버튼만 있는 경우
+
+        confirmAlert({
+            customUI : ({onClose}) => (
+                <div className='popup_wrap'>
+                    <div className='title'>{title}</div>
+                    <div className='pop_conts'>
+                        <p className='msg'>{msg}</p>
+                        <ul className='pop_btns'>
+                            <li>
+                                <button className='btn_middle_red' onClick={onClose}>
+                                    <span>확인</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            )
+        });
+
+    }
+
 }

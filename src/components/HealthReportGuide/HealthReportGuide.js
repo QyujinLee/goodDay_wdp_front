@@ -21,25 +21,35 @@ class HealthReportGuide extends Component {
                 <div className='link_wrap'>
                     <a href='#!' className='link_txt' onClick={() => {
                         confirmAlert({
-                            childrenElement: () => (
+                            customUI: ({onClose}) => (
                                 <Fragment>
-                                    <h1>비만 나이 검사하기</h1>
-                                    <div className='pop_conts'>
-                                        <div className='img_box'>
-                                            <img src='images/img_report_fat.png' alt='' />
+                                    <div className='popup_wrap report'>
+                                        <div className='title'>비만 나이 검사하기</div>
+                                        <div className='pop_conts'>
+                                            <div className='img_box'>
+                                                <img src='images/img_report_fat.png' alt='' />
+                                            </div>
+                                            <p className='msg'>건강검진 기록이 없거나<br />
+                                            연동이 귀찮은 경우<br />
+                                            쉽고 간단하게 <br />
+                                            비만 나이 검사를 할 수 있어요</p>
+                                            <p className='msg_p'><span className=' ico_p'></span>검사하면 <b>1,000P</b>적립</p>
+                                            <ul className='pop_btns'>
+                                                <li>
+                                                    <button className='btn_middle' onClick={onClose}>
+                                                        <span>닫기</span>
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button className='btn_middle_red' onClick={() => window.location.href = '/report/inputBodyAge'}>
+                                                        <span>검사하기</span>
+                                                    </button>
+                                                </li>
+                                            </ul>
                                         </div>
-                                        <p className='msg'>건강검진 기록이 없거나<br />
-                                        연동이 귀찮은 경우<br />
-                                        쉽고 간단하게 <br />
-                                        비만 나이 검사를 할 수 있어요</p>
-                                        <p className='msg_p'><span className='ico_p'></span>검사하면 <b>1,000P</b>적립</p>
                                     </div>
                                 </Fragment>
-                            ),
-                            buttons: [
-                                { label: '검사하기', onClick: () => { window.location.href = '/report/inputBodyAge'; } },
-                                { label: '닫기', onClick: () => null }
-                            ]
+                            )
                         });
                     }}>혹시 건강검진 경험이 없나요?</a>
                 </div>

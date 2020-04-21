@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { confirmAlert } from 'react-confirm-alert';
 
 import * as missionAction from 'modules/mission';
 
@@ -289,13 +288,13 @@ class MissionInputFormContainer extends Component {
                 }
 
             } else {
-                confirmAlert({
-                    title: '다짐 입력',
-                    message: '다짐을 입력해 주세요',
-                    buttons: [
-                        { label: '닫기', onClick: () => null }
-                    ]
-                });
+
+                const title = '다짐 입력';
+                const msg = '다짐을 입력해 주세요';
+                const btnType = 'end';
+
+                utils.showAlert(title, msg, btnType);
+
             }
 
         } else if(misnSrno === ServiceConstants.MISN_DIV_CD_ESTEEM) {
@@ -329,13 +328,11 @@ class MissionInputFormContainer extends Component {
 
             } else {
 
-                confirmAlert({
-                    title: '감사일기 입력',
-                    message: '감사한 사람과 내용을 모두 입력해 주세요',
-                    buttons: [
-                        { label: '닫기', onClick: () => null }
-                    ]
-                });
+                const title = '감사일기 입력';
+                const msg = '감사한 사람과 내용을 모두 입력해 주세요';
+                const btnType = 'end';
+
+                utils.showAlert(title, msg, btnType);
 
             }
 
@@ -355,21 +352,22 @@ class MissionInputFormContainer extends Component {
         const value = e.target.value;
         const targetId = e.target.id;
         const enterCnt = (value.match(/\n/g) || []).length;
+        let msg = '';
 
         if(1 < enterCnt) {
 
-        const message = '줄바꿈은 한 번만 가능합니다';
-        this.showAlert(message, targetId, e);
+        msg = '줄바꿈은 한 번만 가능합니다';
+        this.showAlert(msg, targetId, e);
               
         } else if(0 === enterCnt && 15 < value.length) {
 
-        const message = '최대 15자까지 입력 가능합니다';
-        this.showAlert(message, targetId, e);
+        msg = '최대 15자까지 입력 가능합니다';
+        this.showAlert(msg, targetId, e);
 
         } else if(1 === enterCnt && 16 < value.length) {
 
-        const message = '최대 15자까지 입력 가능합니다';
-        this.showAlert(message, targetId, e);
+        msg = '최대 15자까지 입력 가능합니다';
+        this.showAlert(msg, targetId, e);
 
         } else {
 
@@ -389,21 +387,17 @@ class MissionInputFormContainer extends Component {
 
     /**
      * 텍스트 입력 시 alert 창 출력 제어
-     * @param message
+     * @param msg
      * @param targetId
      * @param e
      */
-    showAlert = (message, targetId, e) => {
+    showAlert = (msg, targetId, e) => {
 
         const { answerFir, answerSec } = this.props;
+        const title = '다짐 입력';
+        const btnType = 'end';
 
-        confirmAlert({
-            title: '다짐 입력',
-            message: message,
-            buttons: [
-                { label: '닫기', onClick: () => null }
-            ]
-        });
+        utils.showAlert(title, msg, btnType);
 
         if('inputPerson' === targetId) {
             e.target.value = answerFir;

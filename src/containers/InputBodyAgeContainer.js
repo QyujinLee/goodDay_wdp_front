@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { confirmAlert } from 'react-confirm-alert';
 
 import InputBodyAgeHeight from 'components/InputBodyAgeHeight';
 import InputBodyAgeWeight from 'components/InputBodyAgeWeight';
@@ -305,14 +304,14 @@ class InputBodyAgeContainer extends Component {
         if(ServiceConstants.MISN_DTL_SRNO_WEIGHT_INPUT_START <= misnDtlSrno 
             && ServiceConstants.MISN_DTL_SRNO_WEIGHT_INPUT_END >= misnDtlSrno) {
 
-            confirmAlert({
-                title: '몸무게 입력',
-                message: '몸무게 입력을 종료할까요?',
-                buttons: [
-                    { label: '종료', onClick: () => { utils.extApp('02'); } },
-                    { label: '취소', onClick: () => null }
-                ]
-            });
+            const title = '몸무게 입력';
+            const msg = '몸무게 입력을 종료할까요?';
+            const btnType = 'end';
+            const callback = function(){
+                utils.extApp('02');
+            }
+    
+            utils.showAlert(title, msg, btnType, callback);
 
         } else {
 
@@ -332,43 +331,29 @@ class InputBodyAgeContainer extends Component {
 
         const {misnSrno} = this.props;
 
-        let alertCtt = '';
-        let closeAction = function(){};
-
         if(undefined !== misnSrno && '' !== misnSrno) {
 
-            alertCtt = (<Fragment>
-                            <h1>미션</h1>
-                            <p className='msg'>미션을 종료할까요?</p>
-                        </Fragment>);
-            
-            closeAction = function(){
-                // 앱 메인 페이지로 이동
-                utils.extApp('02')
-            };
+            const title = '미션';
+            const msg = '미션을 종료할까요?';
+            const btnType = 'end';
+            const callback = function(){
+                utils.extApp('02');
+            }
+
+            utils.showAlert(title, msg, btnType, callback);
             
         } else {
 
-            alertCtt = (<Fragment>
-                            <h1>비만나이 검사</h1>
-                            <p className='msg'>비만나이 검사를 종료할까요? <br /> 언제든 다시 시작할 수 있어요.</p>
-                        </Fragment>);
-
-            closeAction = function(){
+            const title = '비만나이 검사';
+            const msg = '비만나이 검사를 종료할까요? <br/> 언제든 다시 시작할 수 있어요.';
+            const btnType = 'end';
+            const callback = function(){
                 window.location = '/report'
-            };
+            }
+
+            utils.showAlert(title, msg, btnType, callback);
 
         }
-
-        confirmAlert({
-            childrenElement: () => (
-                alertCtt
-            ),
-            buttons: [
-                { label: '종료', onClick: () => { closeAction() } },
-                { label: '취소', onClick: () => null }
-            ]
-        });
     }
 
     /**
@@ -943,6 +928,7 @@ class InputBodyAgeContainer extends Component {
         let result = false;
         let title = '';
         let msg = '';
+        const btnType = 'end';
 
         switch(inputBodyAge.get('ageType')) {
 
@@ -952,10 +938,10 @@ class InputBodyAgeContainer extends Component {
 
                 if(inputBodyAge.get('height') > 200) {
                     msg = '키는 200cm를 초과할 수 없습니다.';
-                    this.showAlert(title,msg);
+                    utils.showAlert(title, msg, btnType);
                 } else if(inputBodyAge.get('height') < 100) {
                     msg = '키는 100cm 미만일 수 없습니다.';
-                    this.showAlert(title,msg);
+                    utils.showAlert(title ,msg, btnType);
                 } else {
                     result = true;
                 }
@@ -967,10 +953,10 @@ class InputBodyAgeContainer extends Component {
 
                 if(inputBodyAge.get('bodyWeight') > 200) {
                     msg = '몸무게는 200kg을 초과할 수 없습니다.';
-                    this.showAlert(title,msg);
+                    utils.showAlert(title ,msg, btnType);
                 } else if(inputBodyAge.get('bodyWeight') < 10) {
                     msg = '몸무게는 10kg 미만일 수 없습니다.';
-                    this.showAlert(title,msg);
+                    utils.showAlert(title ,msg, btnType);
                 } else {
                     result = true;
                 }
@@ -982,10 +968,10 @@ class InputBodyAgeContainer extends Component {
 
                 if(inputBodyAge.get('waistCircum') > 200) {
                     msg = '허리둘레는 200cm를 초과할 수 없습니다.';
-                    this.showAlert(title,msg);
+                    utils.showAlert(title ,msg, btnType);
                 } else if(inputBodyAge.get('waistCircum') < 10) {
                     msg = '허리둘레는 10cm 미만일 수 없습니다.';
-                    this.showAlert(title,msg);
+                    utils.showAlert(title ,msg, btnType);
                 } else {
                     result = true;
                 }
@@ -1000,13 +986,13 @@ class InputBodyAgeContainer extends Component {
 
                 if(inputBodyAge.get('hipCircum') > 200) {
                     msg = '엉덩이둘레는 200cm를 초과할 수 없습니다.';
-                    this.showAlert(title,msg);
+                    utils.showAlert(title ,msg, btnType);
                 } else if(inputBodyAge.get('hipCircum') < 10) {
                     msg = '엉덩이둘레는 10cm 미만일 수 없습니다.';
-                    this.showAlert(title,msg);
+                    utils.showAlert(title ,msg, btnType);
                 } else if(waistCircum > (hipCircum * 1.5) || waistCircum < (hipCircum * 0.5)) {
                     msg = '엉덩이 둘레와 허리둘레의 범위를 확인하세요.';
-                    this.showAlert(title,msg);
+                    utils.showAlert(title ,msg, btnType);
                 } else {
                     result = true;
                 }
@@ -1017,22 +1003,6 @@ class InputBodyAgeContainer extends Component {
         };
         return result;
     }
-
-    /**
-     * 알림창 팝업
-     * @param title 
-     * @param msg 
-     */
-    showAlert(title, msg) {
-        confirmAlert({
-            title: title,
-            message: msg,
-            buttons: [
-                { label: '확인', onClick: () => null }
-            ]
-        });
-    }
-
 
     render() {
 

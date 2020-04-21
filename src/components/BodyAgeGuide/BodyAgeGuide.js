@@ -24,24 +24,34 @@ class BodyAgeGuide extends Component {
                 <div className='link_wrap'>
                     <a href='#!' className='link_txt' onClick={() => {
                         confirmAlert({
-                            childrenElement: () => (
+                            customUI: ({onClose}) => (
                                 <Fragment>
-                                    <h1>건강검진 불러오기</h1>
-                                    <div className='pop_conts'>
-                                        <div className='img_box'>
-                                            <img src='images/img_report_info.png' alt='' />
+                                    <div className='popup_wrap report'>
+                                        <div className='title'>건강검진 불러오기</div>
+                                        <div className='pop_conts'>
+                                            <div className='img_box'>
+                                                <img src='images/img_report_info.png' alt='' />
+                                            </div>
+                                            <p className='msg'>건강검진 기록이 있다면<br />
+                                            10년치 기록을 싹~ 모아서<br />
+                                            한눈에 확인할 수 있어요</p>
+                                            <p className='msg_p'><span className='ico_p'></span>검사하면 <b>5,000P</b>적립</p>
+                                            <ul className='pop_btns'>
+                                                <li>
+                                                    <button className='btn_middle' onClick={onClose}>
+                                                        <span>닫기</span>
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button className='btn_middle_red' onClick={onHealthReportLoad}>
+                                                        <span>검사하기</span>
+                                                    </button>
+                                                </li>
+                                            </ul>
                                         </div>
-                                        <p className='msg'>건강검진 기록이 있다면<br />
-                                        10년치 기록을 싹~ 모아서<br />
-                                        한눈에 확인할 수 있어요</p>
-                                        <p className='msg_p'><span className='ico_p'></span>검사하면 <b>5,000P</b>적립</p>
                                     </div>
                                 </Fragment>
-                            ),
-                            buttons: [
-                                { label: '검사하기', onClick: onHealthReportLoad },
-                                { label: '닫기', onClick: () => null }
-                            ]
+                            )
                         });
                     }}>건강검진 기록을 쉽게 확인하기</a>
                 </div>

@@ -14,8 +14,6 @@ class BodyAgeGraph extends Component {
         const { livingAgeData } = this.props;
         
         let bodyAgeContentsArea = null;
-        const age = utils.getAge(utils.getUserInfo().brthDt);
-        
        
         if (3 === livingAgeData.length) {
 
@@ -25,7 +23,7 @@ class BodyAgeGraph extends Component {
 
             bodyAgeContentsArea = (
                 <div className='health_age_graph'>
-                    <span className='m_tit'>실제나이 <strong> {age}</strong></span>
+                    <span className='m_tit'>실제나이 <strong> {obesity.msmtAge}</strong></span>
                     <div className='card_wrap'>
                         <div className={'age_card ' + utils.getBodyAgeClass(obesity.lbdyAge).gapage}>
                             <span className='tit'>{obesity.mediExamItmDivCdNm}</span>
