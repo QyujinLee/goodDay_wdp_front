@@ -107,7 +107,7 @@ class ActivityBloodSugarContainer extends Component {
         let activityBloodSugarArea = null;
         let statusClassName = '';
         
-        if((bloodSugarBeforeMeal && bloodSugarAfterMeal) && ('' !== bloodSugarBeforeMeal && '' !== bloodSugarAfterMeal)) {
+        if((undefined !== bloodSugarBeforeMeal && undefined !== bloodSugarAfterMeal) && ('' !== bloodSugarBeforeMeal || '' !== bloodSugarAfterMeal)) {
 
             if(latestDateBloodSugarBeforeMeal > latestDateBloodSugarAfterMeal) {
                 statusClassName = this.getStatusClassName(bloodSugarBeforeMeal, scopeBloodSugarBeforeMeal);
@@ -115,11 +115,11 @@ class ActivityBloodSugarContainer extends Component {
                 statusClassName = this.getStatusClassName(bloodSugarAfterMeal, scopeBloodSugarBeforeMeal);
             }
 
-        } else if(bloodSugarBeforeMeal && '' !== bloodSugarBeforeMeal && '' === bloodSugarAfterMeal) {
+        } else if(undefined !== bloodSugarBeforeMeal && '' !== bloodSugarBeforeMeal && '' === bloodSugarAfterMeal) {
 
             statusClassName = this.getStatusClassName(bloodSugarBeforeMeal, scopeBloodSugarBeforeMeal);
 
-        } else if(bloodSugarAfterMeal && '' !== bloodSugarAfterMeal && '' === bloodSugarBeforeMeal) {
+        } else if(undefined !== bloodSugarAfterMeal && '' !== bloodSugarAfterMeal && '' === bloodSugarBeforeMeal) {
 
             statusClassName = this.getStatusClassName(bloodSugarAfterMeal, scopeBloodSugarBeforeMeal);
 

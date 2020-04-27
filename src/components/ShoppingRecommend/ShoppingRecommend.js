@@ -35,8 +35,16 @@ class ShoppingRecommend extends Component {
                                                         <div className='img_box'>
                                                             <img src={item.imgLocNm} alt='' />
                                                         </div>
-                                                        <span className='tit'>{item.prodTitle}</span>
-                                                        <span>{item.prodNm}</span>
+                                                        {
+                                                            ServiceConstants.SHOPPING_CTGID_HEALTH_FOOD !== item.ctgId?
+                                                            <span className='tit'>{'' !== item.prodTitle?item.prodTitle:item.prodNm}</span>
+                                                            :null
+                                                        }
+                                                        {
+                                                            ServiceConstants.SHOPPING_CTGID_BANK_BOOK !== item.ctgId?
+                                                            <span>{item.prodNm}</span>
+                                                            :null
+                                                        }                                            
                                                     </a>
                                                 </li>
                                             )

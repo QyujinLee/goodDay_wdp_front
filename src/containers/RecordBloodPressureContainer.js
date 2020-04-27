@@ -9,144 +9,57 @@ import * as utils from 'lib/utils';
 import * as ServiceConstants from 'constants/serviceConstants';
 
 import * as recordBloodPressureActions from 'modules/recordBloodPressure';
+import * as activityPhrActions from 'modules/activityPhr';
 
 
 class RecordBloodPressureContainer extends Component {
 
     componentDidMount() {
         utils.extApp('04');
-        const { bloodPressure, inputType } = this.props;
+        const { inputType, RecordBloodPressureActions } = this.props;
 
         if('create' === inputType) {
 
             // 혈압 기본 Set
-            document.querySelectorAll('.h_range_slider')[0].scrollLeft = utils.getScrollPosition(utils.getBodyAgeDefaultValue('bloodPressureSystolic'));
-            document.querySelectorAll('.h_range_slider')[1].scrollLeft = utils.getScrollPosition(utils.getBodyAgeDefaultValue('bloodPressureDiastolic'));
-        } else {
-
-            // redux에 set한 체중 데이터가 있는 경우
-            document.querySelectorAll('.h_range_slider')[0].scrollLeft = utils.getScrollPosition(Number(bloodPressure.get('bloodPressureSystolic')));
-            document.querySelectorAll('.h_range_slider')[1].scrollLeft = utils.getScrollPosition(Number(bloodPressure.get('bloodPressureDiastolic')));
-
-        }
-
-    }
-
-    /**
-     * 혈압 기록 값 변경 시 Redux set
-     * @param e
-     * @returns {void}
-     */
-    handleChangeInputValue = (e) => {
-
-        const { RecordBloodPressureActions } = this.props;
-
-        if(e.target.classList.contains('systolic')) {
-            let value = document.getElementsByClassName('inp_txt systolic')[0].value
-            
-            value = utils.validBodyAgeInteger(value, 'bloodPressure'); // 유효성 검사
-            
-            document.getElementsByClassName('inp_txt systolic')[0].value = value;
-
-            // 수축기 값 set
             RecordBloodPressureActions.setRecordBloodPressureSystolic({
-                bloodPressureSystolic: value
+                bloodPressureSystolic : utils.getBodyAgeDefaultValue('bloodPressureSystolic')
             });
-            document.querySelectorAll('.h_range_slider')[0].scrollLeft = utils.getScrollPosition(value);
-
-        } else if (e.target.classList.contains('diastolic')) {
-            let value = document.getElementsByClassName('inp_txt diastolic')[0].value
-
-            value = utils.validBodyAgeInteger(value, 'bloodPressure'); // 유효성 검사
-            
-            document.getElementsByClassName('inp_txt diastolic')[0].value = value;
-
-            // 이완기 값 set
             RecordBloodPressureActions.setRecordBloodPressureDiastolic({
-                bloodPressureDiastolic: value
+                bloodPressureDiastolic : utils.getBodyAgeDefaultValue('bloodPressureDiastolic')
             });
-            document.querySelectorAll('.h_range_slider')[1].scrollLeft = utils.getScrollPosition(value);
+            
+        }
+
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if(prevProps.bloodPressure.get('bloodPressureSystolic') !== this.props.bloodPressure.get('bloodPressureSystolic')) {
+            this.handleScroll('systolic');
+        } else if (prevProps.bloodPressure.get('bloodPressureDiastolic') !== this.props.bloodPressure.get('bloodPressureDiastolic')) {
+            this.handleScroll('diastolic');
         }
     }
 
-    scrollTimer = null;
     /**
-     * 혈압 기록 스크롤
-     * @param e
-     * @returns {void}
+     * 스크롤 제어
+     * @param scrollType
      */
-    handleRecordBloodPressureScroll = e => {
+    handleScroll = (scrollType) => {
 
-        let scrollType = '';
-        let active = true; //현재 스크롤여부
-        const nowScroll = e.target.scrollLeft;
-
-        const valueRange = utils.getBodyAgeValueRange('bloodPressure'); // 값 범위
-        
-        if(e.target.classList.contains('systolic')) {
-            scrollType = 'systolic'
-
-            if(utils.getValueByScrollPosition(nowScroll) > valueRange.max) {
-                document.querySelectorAll('.h_range_slider')[0].scrollLeft = utils.getScrollPosition(valueRange.max);
-            }
-
-        } else if(e.target.classList.contains('diastolic')) {
-            scrollType = 'diastolic'
-
-            if(utils.getValueByScrollPosition(nowScroll) > valueRange.max) {
-                document.querySelectorAll('.h_range_slider')[1].scrollLeft = utils.getScrollPosition(valueRange.max);
-            }
-
-        }
-
-        this.displayValue(nowScroll, scrollType);
+        let active = true;
 
         this.activeRuler(active, scrollType);
-
+    
         clearTimeout(this.scrollTimer);
-
         this.scrollTimer = setTimeout(function() {
             active = false;
             this.activeRuler(active, scrollType);
         }.bind(this), 250);
         active = true;
-
     }
 
     /**
-     * 혈압 기록 값
-     * @param nowScroll
-     * @param scrollType
-     * @returns {void}
-     */
-    displayValue(nowScroll, scrollType) {
-
-        const { RecordBloodPressureActions, bloodPressure } = this.props;
-
-        const curCm = utils.getValueByScrollPosition(nowScroll);
-        if('systolic' === scrollType) {
-
-            if(Math.abs(bloodPressure.get('bloodPressureSystolic') - curCm) > 0.1){
-                // 수축기 값 set
-                RecordBloodPressureActions.setRecordBloodPressureSystolic({
-                    bloodPressureSystolic: curCm.toFixed(0)
-                });
-            }
-
-        } else if ('diastolic' === scrollType) {
-
-            if(Math.abs(bloodPressure.get('bloodPressureDiastolic') - curCm) > 0.1){
-                // 이완기 값 set
-                RecordBloodPressureActions.setRecordBloodPressureDiastolic({
-                    bloodPressureDiastolic: curCm.toFixed(0)
-                });
-            }
-
-        }
-    }
-
-    /**
-     *  혈압 기록 포인트
+     * 포인트 활성/비활성
      * @param active
      * @param scrollType
      * @returns {void}
@@ -164,6 +77,37 @@ class RecordBloodPressureContainer extends Component {
             point.classList.add('active');
         } else {
             point.classList.remove('active');
+        }
+    }
+
+    /**
+     * 혈압 기록 값 변경 제어
+     * @param e
+     * @returns {void}
+     */
+    handleChangeInputValue = (e) => {
+
+        const { RecordBloodPressureActions } = this.props;
+
+        if(e.target.classList.contains('systolic')) {
+            let value = document.getElementsByClassName('inp_txt systolic')[0].value
+            
+            value = utils.validBodyAgeInteger(value, 'bloodPressure'); // 유효성 검사
+            
+            // 수축기 값 set
+            RecordBloodPressureActions.setRecordBloodPressureSystolic({
+                bloodPressureSystolic: value
+            });
+
+        } else if (e.target.classList.contains('diastolic')) {
+            let value = document.getElementsByClassName('inp_txt diastolic')[0].value
+
+            value = utils.validBodyAgeInteger(value, 'bloodPressure'); // 유효성 검사
+            
+            // 이완기 값 set
+            RecordBloodPressureActions.setRecordBloodPressureDiastolic({
+                bloodPressureDiastolic: value
+            });
         }
     }
 
@@ -377,15 +321,19 @@ class RecordBloodPressureContainer extends Component {
 
     render() {
 
-        const { bloodPressure, prevVal } = this.props;
+        const { bloodPressure, slideRulerType, ActivityPhrActions } = this.props;
+
+        if('bloodPressure' !== slideRulerType) {
+            ActivityPhrActions.setSlideRulerType({
+                slideRulerType : 'bloodPressure'
+            });
+        }
 
         return (
             <Fragment>
                 <RecordBloodPressure 
-                    prevVal={prevVal}
                     bloodPressure={bloodPressure}
                     onChangeInputValue ={this.handleChangeInputValue}
-                    onRecordBloodPressureScroll = {this.handleRecordBloodPressureScroll}
                     onResetBloodPressureValue = {this.handleResetBloodPressureValue}
                     onRecordBloodPressure = {this.handleRecordBloodPressure}
                     onClickRemoveBtn = {this.handleClickRemoveBtn}
@@ -399,9 +347,11 @@ export default connect(
     (state) => ({
         inputType: state.recordBloodPressure.get('inputType'),
         bloodPressure: state.recordBloodPressure,
-        prevVal: state.activityPhr.get('bloodPressureSystolic')
+        prevVal: state.activityPhr.get('bloodPressureSystolic'),
+        slideRulerType : state.activityPhr.get('slideRulerType')
     }),
     (dispatch) => ({
-        RecordBloodPressureActions: bindActionCreators(recordBloodPressureActions, dispatch)
+        RecordBloodPressureActions: bindActionCreators(recordBloodPressureActions, dispatch),
+        ActivityPhrActions: bindActionCreators(activityPhrActions, dispatch)
     })
 )(RecordBloodPressureContainer);

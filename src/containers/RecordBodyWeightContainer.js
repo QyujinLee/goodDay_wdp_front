@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -9,95 +9,71 @@ import * as utils from 'lib/utils';
 import * as ServiceConstants from 'constants/serviceConstants';
 
 import * as recordBodyWeightActions from 'modules/recordBodyWeight';
+import * as activityPhrActions from 'modules/activityPhr';
 
 class RecordBodyWeightContainer extends Component {
 
     componentDidMount() {
         utils.extApp('04');
-        const { weight, inputType } = this.props;
+        const {inputType, prevVal, RecordBodyWeightActions} = this.props;
 
         if('create' === inputType) {
-            // // 체중 기본 Set
-            document.querySelector('.h_range_slider').scrollLeft = utils.getScrollPosition(utils.getBodyAgeDefaultValue('bodyWeight'));
+            // redux 값 set
+            RecordBodyWeightActions.setRecordBodyWeight({
+                weight : utils.getBodyAgeDefaultValue('bodyWeight')
+            });
         } else {
-            // 입력된 체중이 있을 경우
-            document.querySelector('.h_range_slider').scrollLeft = utils.getScrollPosition(weight);
+            // redux 값 set
+            RecordBodyWeightActions.setRecordBodyWeight({
+                weight : prevVal
+            });
+        }
+
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if(prevProps.weight !== this.props.weight) {
+            this.handleScroll();
         }
     }
 
-    
     /**
-     * 체중 기록 값 변경 시 Redux set
-     * @param e
-     * @returns {void}
+     * 스크롤 제어
      */
-    handleChangeInputValue = (e) => {
+    handleScroll = () => {
+        let active = true;
 
-        const { RecordBodyWeightActions, weight } = this.props;
-
-        const curWeight = utils.validBodyAgeFloat('bodyWeight', weight, e);
-        RecordBodyWeightActions.setRecordBodyWeight({ weight : curWeight });
-
-        //입력된 숫자에 해당하는 위치로 스크롤 이동(허용치 이내일 경우)
-        const range = utils.getBodyAgeValueRange('bodyWeight');
-        if(Number(curWeight) >= range.min && Number(curWeight) <= range.max ){
-            document.querySelector('.h_range_slider').scrollLeft = utils.getScrollPosition(curWeight);
-        }
-    }
+        this.changeCharacter();
+        this.activeRuler(active);
     
-    /**
-     * 체중 기록 스크롤
-     * @param e
-     * @returns {void}
-     */
-    handleRecordBodyWeightScroll = e => {
-        
-        let active = true; //현재 스크롤여부
-        const nowScroll = e.target.scrollLeft;
-        const range = utils.getBodyAgeValueRange('bodyWeight');
-        if(utils.getValueByScrollPosition(nowScroll) > range.max) {
-            document.querySelector('.h_range_slider').scrollLeft = utils.getScrollPosition(range.max)
-        } else if(utils.getValueByScrollPosition(nowScroll) < range.min){
-            document.querySelector('.h_range_slider').scrollLeft = utils.getScrollPosition(range.min)
-        } else{
-            this.changeCharacter(nowScroll);
-            this.moveScroll(nowScroll);
-    
+        clearTimeout(this.scrollTimer);
+        this.scrollTimer = setTimeout(function() {
+            active = false;
             this.activeRuler(active);
-    
-            clearTimeout(this.scrollTimer);
-    
-            this.scrollTimer = setTimeout(function() {
-                active = false;
-                this.activeRuler(active);
-            }.bind(this), 250);
-            active = true;
-        }
-
+        }.bind(this), 250);
+        active = true;
     }
 
     /**
-     * 체중 기록 캐릭터
-     * @param nowScroll
-     * @param num
-     * @returns {void}
+     * 체중 캐릭터 변경 제어
      */
-    changeCharacter(nowScroll) {
+    changeCharacter = () => {
+        const { weight } = this.props;
 
-        const minX = utils.getScrollPosition(25) ; 
-        const maxX = utils.getScrollPosition(120); 
+        const minX = 25; // 캐릭터 최소 크기 변경 시점 값
+        const maxX = 120; // 캐릭터 최대 크기 변경 시점 값
         const hPer = 100 / (maxX - minX); 
         const myHead = document.querySelector('.my_character .head');
-        const minPer = 133 / 250;
+        const minPer = 133 / 250; // 캐릭터 최소 크기 일때 px 값 / 최대 크기 일때 px 값
         const maxPer = 1;
         const rangePer = maxPer - minPer;
-        const marginLft = -(myHead.offsetWidth/2);
+        const marginLeft = -(myHead.offsetWidth/2);
 
         let posHead = myHead.offsetBottom;
-        const gab = nowScroll - minX;
+        const gab = weight - minX;
         let curPer = 1; //현재 체중 percent
         curPer = minPer + ( rangePer / 100 * (gab * hPer));
-        const curW = utils.getBodyAgeDefaultValue('bodyWeight');
+        const curW = weight === '' ? utils.getBodyAgeDefaultValue('bodyWeight') : weight;
 
         const face = document.querySelector('.face');
         face.classList.remove('thin');
@@ -119,34 +95,13 @@ class RecordBodyWeightContainer extends Component {
             curPer = maxPer;
         }
         myHead.style.transform = 'scale('+curPer+')';
-        myHead.style.marginLeft = marginLft+'px';
+        myHead.style.marginLeft = marginLeft+'px';
         myHead.style.bottom = posHead + 'px';
     }
-
+    
     /**
-     * 체중 기록 값
-     * @param nowScroll
-     * @returns {void}
-     */
-    moveScroll(nowScroll) {
-
-        const { RecordBodyWeightActions, weight } = this.props;
-        const curKg = utils.getValueByScrollPosition(nowScroll);
-
-        // 소숫점 검사를 하고
-        if(Math.abs(weight - curKg) > 0.1) {
-            // 체중 값 set
-            RecordBodyWeightActions.setRecordBodyWeight({
-                weight: curKg.toFixed(1)
-            });
-
-        }
-        
-    }
-
-    /**
-     *  체중 기록 포인트
-     * @param nowScroll
+     * 포인트 활성/비활성
+     * @param active
      * @returns {void}
      */
     activeRuler(active) {
@@ -158,6 +113,21 @@ class RecordBodyWeightContainer extends Component {
         } else {
             point.classList.remove('active');
         }
+    }
+
+    /**
+     * 몸무게 입력 값 변경 제어
+     */
+    handleChangeInputValue = (e) => {
+        const { weight, RecordBodyWeightActions } = this.props;
+
+        // 유효성 검사
+        const curWeight = utils.validBodyAgeFloat('bodyWeight', weight, e);
+
+        // redux 값 set
+        RecordBodyWeightActions.setRecordBodyWeight({
+            weight : curWeight
+        });
     }
 
     /**
@@ -195,76 +165,70 @@ class RecordBodyWeightContainer extends Component {
 
         const {weight, inputType, prevVal} = this.props;
 
+        const range = utils.getBodyAgeValueRange('bodyWeight');
+
         const title = '몸무게 입력';
         const btnType = 'end';
-        let msg = '';
-
-        if(weight > 200) {
-
-            msg = '몸무게는 200kg를 초과할 수 없습니다';
-
-            utils.showAlert(title, msg, btnType);
-
-        } else if(weight < 10){
-
-            msg = '몸무게는 10kg 미만일 수 없습니다';
-
-            utils.showAlert(title, msg, btnType);
-
+        let valid = false;
+        if (weight < range.min) {
+            utils.showAlert(title, '몸무게는 ' + range.min + 'kg 미만일 수 없습니다.', btnType);
+        } else if (weight > range.max) {
+            utils.showAlert(title, '몸무게는 ' + range.max + 'kg을 초과할 수 없습니다.', btnType);
         } else {
-
-            const params = [{
-                phrItmDivCd : ServiceConstants.PHR_ITM_DIV_CD_WEIGHT,
-                phrItmVal : weight
-            }];
-    
-            try {
-    
-                if('create' === inputType) {
-                    // PHR 개별 입력 API 호출
-                    const postInputPhrDataAPI = this.postInputPhrDataAPI(params);
-        
-                    postInputPhrDataAPI.then((response) => {
-        
-                        if(undefined !== response && 200 === response[0].status) {
-                            
-                            if('' === prevVal) {
-                                // 메인 페이지에서의 입력 성공
-                                window.location.href = '/activity';
-                            } else {
-                                // 상세 페이지에서의 입력 성공
-                                window.location.href = '/activity/detailBodyWeight';
-                            }
-        
-                        } else {
-                            console.log('API request fail : ', response[0]);
-                        }
-        
-                    });
-                } else if ('modify' === inputType) {
-                    // PHR 개별 수정 API 호출
-                    const putInputPhrDataAPI = this.putInputPhrDataAPI(params);
-        
-                    putInputPhrDataAPI.then((response) => {
-        
-                        if(undefined !== response && 200 === response[0].status) {
-        
-                            // 성공 시 페이지 이동
-                            window.location.href = '/activity/detailBodyWeight';
-        
-                        } else {
-                            console.log('API request fail : ', response[0]);
-                        }
-        
-                    });
-                }
-    
-            } catch (error) {
-                console.log('error : ', error);
-            }
-
+            valid = true;
         }
 
+        if (!valid) return;
+
+        const params = [{
+            phrItmDivCd : ServiceConstants.PHR_ITM_DIV_CD_WEIGHT,
+            phrItmVal : weight
+        }];
+
+        try {
+
+            if('create' === inputType) {
+                // PHR 개별 입력 API 호출
+                const postInputPhrDataAPI = this.postInputPhrDataAPI(params);
+    
+                postInputPhrDataAPI.then((response) => {
+    
+                    if(undefined !== response && 200 === response[0].status) {
+                        
+                        if('' === prevVal) {
+                            // 메인 페이지에서의 입력 성공
+                            window.location.href = '/activity';
+                        } else {
+                            // 상세 페이지에서의 입력 성공
+                            window.location.href = '/activity/detailBodyWeight';
+                        }
+    
+                    } else {
+                        console.log('API request fail : ', response[0]);
+                    }
+    
+                });
+            } else if ('modify' === inputType) {
+                // PHR 개별 수정 API 호출
+                const putInputPhrDataAPI = this.putInputPhrDataAPI(params);
+    
+                putInputPhrDataAPI.then((response) => {
+    
+                    if(undefined !== response && 200 === response[0].status) {
+    
+                        // 성공 시 페이지 이동
+                        window.location.href = '/activity/detailBodyWeight';
+    
+                    } else {
+                        console.log('API request fail : ', response[0]);
+                    }
+    
+                });
+            }
+
+        } catch (error) {
+            console.log('error : ', error);
+        }
     }
 
     /**
@@ -347,25 +311,27 @@ class RecordBodyWeightContainer extends Component {
             [api.deleteInputPhrDataAPI(param)]
         );
     }
-    
+
+
     render() {
 
-        const { inputType, weight, prevVal } = this.props;
+        const { inputType, weight, slideRulerType, ActivityPhrActions} = this.props;
+
+        if('activityWeight' !== slideRulerType) {
+            ActivityPhrActions.setSlideRulerType({
+                slideRulerType : 'activityWeight'
+            });
+        }
 
         return (
-            <Fragment>
-                <RecordBodyWeight 
-                    weight={weight}
-                    inputType={inputType}
-                    prevVal={prevVal}
-                    onChangeInputValue ={this.handleChangeInputValue}
-                    onRecordBodyWeightScroll={this.handleRecordBodyWeightScroll}
-                    onResetWeightValue = {this.handleResetWeightValue}
-                    onRecordBodyWeight = {this.handleRecordBodyWeight}
-                    onClickRemoveBtn = {this.handleClickRemoveBtn}
-                    onKeyDown={this.handleKeyDown}
-                    />
-            </Fragment>
+            <RecordBodyWeight 
+                inputType={inputType}
+                weight={weight}
+                onChangeInputValue={this.handleChangeInputValue}
+                onResetWeightValue={this.handleResetWeightValue}
+                onRecordBodyWeight={this.handleRecordBodyWeight}
+                onClickRemoveBtn={this.handleClickRemoveBtn}
+            />
         );
     }
 }
@@ -374,9 +340,11 @@ export default connect(
     (state) => ({
         inputType: state.recordBodyWeight.get('inputType'),
         weight: state.recordBodyWeight.get('weight'),
-        prevVal: state.activityPhr.get('weight')
+        prevVal: state.activityPhr.get('weight'),
+        slideRulerType : state.activityPhr.get('slideRulerType')
     }),
     (dispatch) => ({
-        RecordBodyWeightActions: bindActionCreators(recordBodyWeightActions, dispatch)
+        RecordBodyWeightActions: bindActionCreators(recordBodyWeightActions, dispatch),
+        ActivityPhrActions: bindActionCreators(activityPhrActions, dispatch)
     })
 )(RecordBodyWeightContainer);

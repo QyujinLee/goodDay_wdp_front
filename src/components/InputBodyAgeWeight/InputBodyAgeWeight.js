@@ -1,10 +1,12 @@
 import React, { Component, Fragment } from 'react';
+import SlideRuler from 'components/SlideRulerComponent';
 
 class InputBodyAgeWeight extends Component {
     render() {
 
         const { inputBodyAge } = this.props; // props data
-        const { onClickConfirmBtn, onClickBackBtn, onChangeInputValue, onBodyAgeScroll, onClosed, hideCloseBtnFlag } = this.props; // props event
+        const { onClickConfirmBtn, onClickBackBtn, onChangeInputValue, onClosed, hideCloseBtnFlag } = this.props; // props event
+        const weight = inputBodyAge.get('bodyWeight');
 
         return (
             <Fragment>
@@ -29,7 +31,7 @@ class InputBodyAgeWeight extends Component {
                             <span className='noti'>몸무게를 입력하세요</span>
                             <div className='input_bx'>
                                 <input type='tel' id='inp_txt' className='inp_txt bodyWeight'
-                                    value={inputBodyAge.get('bodyWeight')} onChange={onChangeInputValue}
+                                    value={weight} onChange={onChangeInputValue}
                                 />
                                 <label htmlFor='inp_txt'>kg</label>
                             </div>
@@ -45,34 +47,10 @@ class InputBodyAgeWeight extends Component {
 
                         <div className='value_scroll weight'>
                             <div className='value_tooltip'>
-                                <span>{inputBodyAge.get('bodyWeight')}</span>
+                                <span>{weight}</span>
                             </div>
-                            <div className='h_range_slider' onScroll={onBodyAgeScroll}>
-                                <div className='range_measure'>
-                                    <ul className='measure_num'>
-                                        <li>0</li>
-                                        <li>10</li>
-                                        <li>30</li>
-                                        <li>50</li>
-                                        <li>70</li>
-                                        <li>90</li>
-                                        <li>110</li>
-                                        <li>130</li>
-                                        <li>150</li>
-                                        <li>170</li>
-                                        <li>190</li>
-                                        <li>210</li>
-                                        <li>230</li>
-                                        <li>250</li>
-                                        <li>270</li>
-                                        <li>290</li>
-                                        <li>310</li>
-                                        <li>330</li>
-                                        <li>350</li>
-                                        <li>370</li>
-                                        <li style={{marginLeft:'71px'}}>390</li>
-                                    </ul>
-                                </div>
+                            <div className='h_range_slider'>
+                                <SlideRuler currentValue={weight}/>
                             </div>
                             <span className='point'></span>
                         </div>

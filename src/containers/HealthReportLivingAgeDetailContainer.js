@@ -14,7 +14,7 @@ class HealthReportLivingAgeDetailContainer extends Component {
     componentDidMount() {
 
         utils.extApp('04');
-        
+
         // 항목별 생체나이 상세 조회
         this.getHealthReportDetailLivingAgeItemProcess();
     }
@@ -76,19 +76,21 @@ class HealthReportLivingAgeDetailContainer extends Component {
 
     render() {
 
-        const { lbdyAgeDivCd, livingAge, livingAgeDetail, nowDate} = this.props;
+        const { lbdyAgeDivCd, livingAge, livingAgeDetail, mediExamGrpId, selectDate } = this.props;
 
         const livingAgeFilter = livingAge.filter(filterItem => {
             return filterItem.lbdyAgeDivCd === lbdyAgeDivCd;
         });
-        const date = nowDate.split('_');
-      
+        const selectDateFilter = selectDate.filter(filterItem => {
+            return filterItem.mediExamGrpId === mediExamGrpId;
+        });
+
         return (
             <HealthReportLivingAgeDetail
                 livingAge={livingAgeFilter[0]}
                 livingAgeDetail={livingAgeDetail}
+                selectDate={selectDateFilter[0]}
                 onClosed={this.handleClosed}
-                date ={date[1]}
             />
         );
     }
@@ -100,7 +102,7 @@ export default connect(
         lbdyAgeDivCd: state.healthReportContents.get('detail').get('lbdyAgeDivCd'),
         livingAge: state.healthReportContents.get('detail').get('livingAge'),
         livingAgeDetail: state.healthReportContents.get('detail').get('livingAgeDetail'),
-        nowDate: state.healthReportContents.get('detail').get('mediExamGrpId')
+        selectDate: state.healthReportContents.get('detail').get('selectDate')
     }),
     (dispatch) => ({
         HealthReportContentsActions: bindActionCreators(healthReportContentsActions, dispatch)

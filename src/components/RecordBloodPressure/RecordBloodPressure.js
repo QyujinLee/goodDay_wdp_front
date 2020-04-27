@@ -1,10 +1,11 @@
 import React, { Component, Fragment } from 'react';
+import SlideRuler from 'components/SlideRulerComponent';
 
 class RecordBloodPressure extends Component {
     render() {
 
         const { bloodPressure, onChangeInputValue, onResetBloodPressureValue, 
-                onRecordBloodPressureScroll, onRecordBloodPressure, onClickRemoveBtn } = this.props;
+                onRecordBloodPressure, onClickRemoveBtn } = this.props;
 
         const inputType = bloodPressure.get('inputType');
         const systolic = bloodPressure.get('bloodPressureSystolic');
@@ -60,34 +61,8 @@ class RecordBloodPressure extends Component {
                             <div className='value_tooltip'>
                                 <span>{systolic}</span>
                             </div>
-                            <div className='h_range_slider systolic' onScroll={onRecordBloodPressureScroll}>
-                                <div className='range_measure' style={{'width':'2453px'}}>
-                                    <ul className='measure_num' style={{'width':'2453px'}}>
-                                        <li>0</li>
-                                        <li>10</li>
-                                        <li>30</li>
-                                        <li>50</li>
-                                        <li>70</li>
-                                        <li>90</li>
-                                        <li>110</li>
-                                        <li>130</li>
-                                        <li>150</li>
-                                        <li>170</li>
-                                        <li>190</li>
-                                        <li>210</li>
-                                        <li>230</li>
-                                        <li>250</li>
-                                        <li>270</li>
-                                        <li>290</li>
-                                        <li>310</li>
-                                        <li>330</li>
-                                        <li>350</li>
-                                        <li>370</li>
-                                        <li>390</li>
-                                        <li>410</li>
-                                        <li style={{marginLeft:'71px'}}>430</li>
-                                    </ul>
-                                </div>
+                            <div className='h_range_slider systolic'>
+                                <SlideRuler currentValue={systolic} rulerClassName='systolic'/>
                             </div>
                             <span className='point'></span>
                         </div>
@@ -103,34 +78,8 @@ class RecordBloodPressure extends Component {
                             <div className='value_tooltip'>
                                 <span>{diastolic}</span>
                             </div>
-                            <div className='h_range_slider diastolic' onScroll={onRecordBloodPressureScroll}>
-                                <div className='range_measure' style={{'width':'2453px'}}>
-                                    <ul className='measure_num' style={{'width':'2453px'}}>
-                                    <li>0</li>
-                                        <li>10</li>
-                                        <li>30</li>
-                                        <li>50</li>
-                                        <li>70</li>
-                                        <li>90</li>
-                                        <li>110</li>
-                                        <li>130</li>
-                                        <li>150</li>
-                                        <li>170</li>
-                                        <li>190</li>
-                                        <li>210</li>
-                                        <li>230</li>
-                                        <li>250</li>
-                                        <li>270</li>
-                                        <li>290</li>
-                                        <li>310</li>
-                                        <li>330</li>
-                                        <li>350</li>
-                                        <li>370</li>
-                                        <li>390</li>
-                                        <li>410</li>
-                                        <li style={{marginLeft:'71px'}}>430</li>
-                                    </ul>
-                                </div>
+                            <div className='h_range_slider diastolic'>
+                                <SlideRuler currentValue={diastolic} rulerClassName='diastolic'/>
                             </div>
                             <span className='point'></span> 
                         </div>

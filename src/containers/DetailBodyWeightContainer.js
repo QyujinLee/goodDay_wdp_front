@@ -16,7 +16,7 @@ class DetailBodyWeightContainer extends Component {
 
     componentDidMount() {
         utils.extApp('04');
-        const { RecordBodyWeightActions, ActivityPhrActions } = this.props;
+        const { ActivityPhrActions } = this.props;
 
         const params = {
             gndrDivCd : utils.getUserInfo().gndrDivCd
@@ -37,11 +37,6 @@ class DetailBodyWeightContainer extends Component {
                         const phrItmDivCd = response[0].data.data.phr[i].phrItmDivCd;
 
                         if(ServiceConstants.PHR_ITM_DIV_CD_WEIGHT === phrItmDivCd) {
-
-                            // Record 체중 값 set
-                            RecordBodyWeightActions.setRecordBodyWeight({
-                                weight: Number(phrArr[i].phrItmVal).toFixed(1)
-                            });
 
                             // Activity 체중 값 set
                             ActivityPhrActions.setActivityPhrWeight({
@@ -85,7 +80,6 @@ class DetailBodyWeightContainer extends Component {
         });
     }
 
-
     render() {
 
         const { weight, latestDateWeight } = this.props;
@@ -101,7 +95,7 @@ class DetailBodyWeightContainer extends Component {
 
 export default connect(
     (state) => ({
-        weight: state.recordBodyWeight.get('weight'),
+        weight: state.activityPhr.get('weight'),
         latestDateWeight: state.activityPhr.get('latestDateWeight')
     }),
     (dispatch) => ({

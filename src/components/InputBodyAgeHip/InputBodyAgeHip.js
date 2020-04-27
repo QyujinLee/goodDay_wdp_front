@@ -1,11 +1,12 @@
 import React, { Component, Fragment } from 'react';
+import SlideRuler from 'components/SlideRulerComponent';
 
 class InputBodyAgeHip extends Component {
     render() {
 
         const { inputBodyAge } = this.props; // props data
-        const { onClickConfirmBtn, onClickBackBtn, onChangeInputValue, onBodyAgeScroll, onClosed } = this.props; // props event
-
+        const { onClickConfirmBtn, onClickBackBtn, onChangeInputValue, onClosed } = this.props; // props event
+        const hip = inputBodyAge.get('hipCircum');
         return (
             <Fragment>
                 <header className='header normal'>
@@ -25,7 +26,7 @@ class InputBodyAgeHip extends Component {
                             <span className='noti'>엉덩이둘레를 입력하세요</span>
                             <div className='input_bx'>
                                 <input type='tel' id='inp_txt' className='inp_txt hipCircum'
-                                    value={inputBodyAge.get('hipCircum')} onChange={onChangeInputValue}
+                                    value={hip} onChange={onChangeInputValue}
                                 />
                                 <label htmlFor='inp_txt'>cm</label>
                             </div>
@@ -41,26 +42,10 @@ class InputBodyAgeHip extends Component {
                         </div>
                         <div className='value_scroll hip'>
                             <div className='value_tooltip'>
-                                <span>{inputBodyAge.get('hipCircum')}</span>
+                                <span>{hip}</span>
                             </div>
-                            <div className='h_range_slider' onScroll={onBodyAgeScroll}>
-                                <div className='range_measure'>
-                                    <ul className='measure_num'>
-                                        <li>0</li>
-                                        <li>20</li>
-                                        <li>40</li>
-                                        <li>60</li>
-                                        <li>80</li>
-                                        <li>100</li>
-                                        <li>120</li>
-                                        <li>140</li>
-                                        <li>160</li>
-                                        <li>180</li>
-                                        <li>200</li>
-                                        <li>220</li>
-                                        <li style={{marginLeft:'71px'}}>240</li>
-                                    </ul>
-                                </div>
+                            <div className='h_range_slider'>
+                                <SlideRuler currentValue={hip}/>
                             </div>
                             <span className='point'></span>
                         </div>

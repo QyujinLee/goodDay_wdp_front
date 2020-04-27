@@ -14,6 +14,7 @@ const SET_NORMAL_SCOPE_BLOOD_PRESSURE_SYSTOLIC = 'activityPhr/SET_NORMAL_SCOPE_B
 const SET_NORMAL_SCOPE_BLOOD_PRESSURE_DIASTOLIC = 'activityPhr/SET_NORMAL_SCOPE_BLOOD_PRESSURE_DIASTOLIC';
 const SET_NORMAL_SCOPE_BLOOD_SUGAR_BEFORE_MEAL = 'activityPhr/SET_NORMAL_SCOPE_BLOOD_SUGAR_BEFORE_MEAL';
 const SET_NORMAL_SCOPE_BLOOD_SUGAR_AFTER_MEAL = 'activityPhr/SET_NORMAL_SCOPE_BLOOD_SUGAR_AFTER_MEAL';
+const SET_SLIDE_RULER_TYPE = 'activityPhr/SET_SLIDE_RULER_TYPE';
 
 export const setActivityPhrWeight = createAction(SET_ACTIVITY_PHR_WEIGHT);
 export const setActivityPhrBloodPressureSystolic = createAction(SET_ACTIVITY_PHR_BLOOD_PRESSURE_SYSTOLIC);
@@ -28,6 +29,7 @@ export const setNormalScopeBloodPressureSystolic = createAction(SET_NORMAL_SCOPE
 export const setNormalScopeBloodPressureDiastolic = createAction(SET_NORMAL_SCOPE_BLOOD_PRESSURE_DIASTOLIC);
 export const setNormalScopeSugarBeforeMeal = createAction(SET_NORMAL_SCOPE_BLOOD_SUGAR_BEFORE_MEAL);
 export const setNormalScopeSugarAfterMeal = createAction(SET_NORMAL_SCOPE_BLOOD_SUGAR_AFTER_MEAL);
+export const setSlideRulerType = createAction(SET_SLIDE_RULER_TYPE);
 
 const initialState = Map({
     weight: '',
@@ -42,7 +44,8 @@ const initialState = Map({
     scopeBloodPressureSystolic: [],
     scopeBloodPressureDiastolic: [],
     scopeBloodSugarBeforeMeal: [],
-    scopeBloodSugarAfterMeal: []
+    scopeBloodSugarAfterMeal: [],
+    slideRulerType:''
 });
 
 export default handleActions({
@@ -98,4 +101,8 @@ export default handleActions({
         const { scopeBloodSugarAfterMeal } = action.payload;
         return state.set('scopeBloodSugarAfterMeal', scopeBloodSugarAfterMeal);
     },
+    [SET_SLIDE_RULER_TYPE]: (state, action) => {
+        const { slideRulerType } = action.payload;
+        return state.set('slideRulerType', slideRulerType);
+    }
 }, initialState);

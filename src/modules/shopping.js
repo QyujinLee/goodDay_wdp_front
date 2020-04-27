@@ -10,7 +10,10 @@ export const setShoppingRecommend = createAction(SET_SHOPPING_RECOMMEND);
 export const setShoppingProfile = createAction(SET_SHOPPING_PROFILE);
 
 const initialState = Map({
-    division: '',
+    division: Map({
+        headerDivision: '', 
+        nextDivision: ''
+    }),
     recommend: [],
     profile: Map({
         information: []
@@ -19,8 +22,8 @@ const initialState = Map({
 
 export default handleActions({
     [SET_SHOPPING_DIVISION]: (state, action) => {
-        const { division } = action.payload;
-        return state.set('division', division);
+        const { type , data } = action.payload;
+        return state.setIn(['division', type] , data);
     },
     [SET_SHOPPING_RECOMMEND]: (state, action) => {
         const { recommend } = action.payload;

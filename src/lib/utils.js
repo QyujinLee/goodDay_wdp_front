@@ -513,7 +513,7 @@ export function getBodyAgeDefaultValue(type){
             defaultValue = 85;
         }
     }
-    console.log("defaultValue : ", defaultValue)
+
     return defaultValue;
 }
 /**
@@ -683,6 +683,79 @@ export function showAlert(title, msg, btnType, callback) {
             )
         });
 
+    }
+
+}
+/**
+ * 검진/비만 상세 차트 화살표 위치 구하기
+ * @param normalscope
+ * @param value 사용자의 수치
+ * @return {Number} left  
+ */
+export function getChartArwStyle(scope, value) {
+
+    // style left 값을 구하기 위한 사용자 값과 범위 갯수 변수 선언
+    let left = 0;
+    const userValue = Math.abs(value);
+    const scopeLength = scope.length;
+
+    //화면 비율에 맞는 최솟값 최댓값을 구하기 위한 설정 
+    const clientWidth = document.body.clientWidth;
+    const Totalbar = clientWidth - 80
+    const min = 40;
+    const max = min + Totalbar;
+    
+    const scopeFilter = scope.filter(filterItem=>{
+          return ServiceConstants.REF_NCL_DIV_CD_CAUTION === filterItem.refNclDivCd;
+    });
+
+    scope.forEach(element => {
+
+        const scopeTermNormal = (ServiceConstants.REF_NCL_DIV_CD_NORMAL === element.refNclDivCd && undefined !== element.endVal ? element.endVal - element.strVal : element.strVal);
+        const scopeTerm = (0 !== scopeFilter.length ? Math.abs(scopeFilter[0].endVal) - Math.abs(scopeFilter[0].strVal) : Math.abs(element.strVal));
+
+        /* eslint-disable*/
+        if (eval(element.strVal + element.strSymbNm + userValue)
+            && eval(element.endVal ? userValue + element.strSymbNm + element.endVal : 1)) {
+
+            if (ServiceConstants.REF_NCL_DIV_CD_NORMAL === element.refNclDivCd) { //정상
+
+                left = (min + ((userValue) / element.strVal) * Totalbar / scopeLength);
+
+                if ('<=' === element.strSymbNm || '<' === element.strSymbNm) {
+                    left = ((element.strVal / userValue) * Totalbar / scopeLength);
+                    if (element.strVal !== scopeTermNormal) {
+                        left = min + ((userValue - element.strVal) / (scopeTermNormal)) * ((Totalbar / scopeLength));
+                    }
+                    if (0 > element.strVal) {
+                        left = (min + (Math.abs(userValue) / Math.abs(element.strVal)) * Totalbar / scopeLength);
+                    }
+                }
+
+            } else if (ServiceConstants.REF_NCL_DIV_CD_CAUTION === element.refNclDivCd) { //주의 or 비만   
+
+                left = (((Totalbar / scopeLength) + min) + (userValue - Math.abs(element.strVal)) / (scopeTerm) * Totalbar / scopeLength);
+
+            } else if (ServiceConstants.REF_NCL_DIV_CD_DANGER === element.refNclDivCd) { //위험 or 고도비만
+               
+                left = ((((Totalbar / scopeLength) * (scopeLength - 1)) + min) + (userValue - (element.strVal)) / (scopeTerm) * (Totalbar / scopeLength));
+
+                if ('>=' === element.strSymbNm || '>' === element.strSymbNm) {
+                    left = ((((Totalbar / scopeLength) * (scopeLength - 1)) + min) + ((element.strVal) - userValue) / (scopeTerm) * Totalbar / scopeLength);
+                    if (0 > element.strVal) {
+                        left = ((((Totalbar / scopeLength) * (scopeLength - 1)) + min) + (Math.abs(userValue) - Math.abs(element.strVal)) / (scopeTerm) * Totalbar / scopeLength);
+                    }
+                }
+            }
+        }
+    });
+
+    if (min >= left) {
+        return min;
+    } else if (max < left) {
+        return max;
+    } else {
+        return left;
     }
 
 }

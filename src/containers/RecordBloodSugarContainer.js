@@ -10,109 +10,67 @@ import * as utils from 'lib/utils';
 import * as ServiceConstants from 'constants/serviceConstants';
 
 import * as recordBloodSugarActions from 'modules/recordBloodSugar';
+import * as activityPhrActions from 'modules/activityPhr';
 
 
 class RecordBloodSugarContainer extends Component {
-    state = {
-        num : 0.1
-    }
+
     componentDidMount() {
         utils.extApp('04');
-        const { bloodSugar } = this.props;
+        const { bloodSugar, RecordBloodSugarActions } = this.props;
         const bloodSugarBeforeMeal = bloodSugar.get('bloodSugarBeforeMeal');
         const bloodSugarAfterMeal = bloodSugar.get('bloodSugarAfterMeal');
 
         if ('create' === bloodSugar.get('inputType')) {
-            
+
             // 혈당 기본 Set
-            document.querySelector('.h_range_slider').scrollLeft = utils.getScrollPosition(utils.getBodyAgeDefaultValue('bloodSugar'), this.state.num);
+            RecordBloodSugarActions.setRecordBloodSugar({
+                bloodSugar : utils.getBodyAgeDefaultValue('bloodSugar')
+            });
+
         } else if ('Y' === bloodSugar.get('mealYn')) {
 
             // redux에 set한 혈당 데이터가 있는 경우
             // case : after
-            document.querySelector('.h_range_slider').scrollLeft = utils.getScrollPosition(Number(bloodSugarAfterMeal), this.state.num);
+            RecordBloodSugarActions.setRecordBloodSugar({
+                bloodSugar : Number(bloodSugarAfterMeal)
+            });
 
         } else {
 
             // redux에 set한 혈당 데이터가 있는 경우
             // case : before
-            document.querySelector('.h_range_slider').scrollLeft = utils.getScrollPosition(Number(bloodSugarBeforeMeal), this.state.num);
+            RecordBloodSugarActions.setRecordBloodSugar({
+                bloodSugar : Number(bloodSugarBeforeMeal)
+            });
 
         }
-   
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if(prevProps.bloodSugar.get('bloodSugar') !== this.props.bloodSugar.get('bloodSugar')) {
+            this.handleScroll();
+        }
     }
 
     /**
-     * 혈당 기록 값 변경 시 Redux set
-     * @param e
-     * @returns {void}
+     * 스크롤 제어
      */
-    handleChangeInputValue = (e) => {
+    handleScroll = () => {
+        let active = true;
 
-        const { RecordBloodSugarActions } = this.props;
-
-        let value = document.getElementsByClassName('inp_txt')[0].value;
-
-        value = utils.validBodyAgeInteger(value, 'bloodSugar'); // 유효성 검사
-            
-        document.getElementsByClassName('inp_txt')[0].value = value;
-
-        // 혈당 값 set
-        RecordBloodSugarActions.setRecordBloodSugar({
-            bloodSugar: value
-        });
-        document.querySelector('.h_range_slider').scrollLeft = utils.getScrollPosition(value, this.state.num);
-    }
-
-    scrollTimer = null;
-    /**
-     * 혈당 기록 스크롤
-     * @param e
-     * @returns {void}
-     */
-    handleRecordBloodSugarScroll = e => {
-
-        let active = true; //현재 스크롤여부
-        const nowScroll = e.target.scrollLeft;
-
-        const num = 0.1;
-        const valueRange = utils.getBodyAgeValueRange('bloodSugar'); // 값 범위
-
-        if(utils.getValueByScrollPosition(nowScroll, num) > valueRange.max) {
-            document.querySelector('.h_range_slider').scrollLeft = utils.getScrollPosition(valueRange.max, num);
-        }
-        
-        this.displayValue(nowScroll);
         this.activeRuler(active);
-
+    
         clearTimeout(this.scrollTimer);
-
         this.scrollTimer = setTimeout(function() {
             active = false;
             this.activeRuler(active);
         }.bind(this), 250);
         active = true;
-
     }
 
     /**
-     * 혈당 기록 값
-     * @param nowScroll
-     * @returns {void}
-     */
-    displayValue(nowScroll) {
-        const { RecordBloodSugarActions, bloodSugar } = this.props;
-        const curCm = utils.getValueByScrollPosition(nowScroll, this.state.num);
-
-        if(Math.abs(bloodSugar.get('bloodSugar') - curCm) > 0.1){
-            RecordBloodSugarActions.setRecordBloodSugar({
-                bloodSugar: curCm.toFixed(0)
-            });
-        }
-    }
-
-    /**
-     *  혈당 기록 포인트
+     * 포인트 활성/비활성
      * @param active
      * @returns {void}
      */
@@ -128,6 +86,26 @@ class RecordBloodSugarContainer extends Component {
     }
 
     /**
+     * 혈당 기록 값 변경 시 Redux set
+     * @param e
+     * @returns {void}
+     */
+    handleChangeInputValue = (e) => {
+
+        const { RecordBloodSugarActions } = this.props;
+
+        let value = document.getElementsByClassName('inp_txt')[0].value
+
+        // 유효성 검사
+        value = utils.validBodyAgeInteger(value, 'bloodSugar');
+
+        // 혈당 값 set
+        RecordBloodSugarActions.setRecordBloodSugar({
+            bloodSugar: value
+        });
+    }
+
+    /**
      *  혈당 기록 초기화
      * @returns {void}
      */
@@ -137,13 +115,14 @@ class RecordBloodSugarContainer extends Component {
         const title = '혈당 입력';
         const msg = '혈당 입력을 종료할까요?';
         const btnType = 'end';
-        const callback = function(){
+        const callback = function () {
+
             // 혈당 값 set
             RecordBloodSugarActions.setRecordBloodSugar({
                 bloodSugar: ''
             });
-            
-            if('' === prevVal1 && '' === prevVal2) {
+
+            if ('' === prevVal1 && '' === prevVal2) {
                 window.location.href = '/activity';
             } else {
                 window.location.href = '/activity/detailBloodSugar';
@@ -167,7 +146,7 @@ class RecordBloodSugarContainer extends Component {
         document.querySelectorAll('.bt_line')[1].classList.remove('sel');
         e.currentTarget.classList.add('sel');
 
-        if(e.currentTarget.classList.contains('mealN')) {
+        if (e.currentTarget.classList.contains('mealN')) {
 
             // 식사여부 값 set
             RecordBloodSugarActions.setRecordBloodSugarMealYn({
@@ -184,15 +163,21 @@ class RecordBloodSugarContainer extends Component {
         }
 
         // 수정 시 값 변경
-        if('modify' === inputType) {
-            if(e.currentTarget.classList.contains('mealN')) {
+        if ('modify' === inputType) {
+            if (e.currentTarget.classList.contains('mealN')) {
 
-                document.querySelector('.h_range_slider').scrollLeft = utils.getScrollPosition(Number(bloodSugar.get('bloodSugarBeforeMeal')), this.state.num);
+                // 혈당 값 set
+                RecordBloodSugarActions.setRecordBloodSugar({
+                    bloodSugar: bloodSugar.get('bloodSugarBeforeMeal')
+                });
 
             } else {
 
-                document.querySelector('.h_range_slider').scrollLeft = utils.getScrollPosition(Number(bloodSugar.get('bloodSugarAfterMeal')), this.state.num);
-                
+                // 혈당 값 set
+                RecordBloodSugarActions.setRecordBloodSugar({
+                    bloodSugar: bloodSugar.get('bloodSugarAfterMeal')
+                });
+
             }
         }
 
@@ -205,7 +190,7 @@ class RecordBloodSugarContainer extends Component {
     handleRecordBloodSugar = () => {
 
         const { bloodSugar, inputType } = this.props;
-        
+
         let prevVal = '';
         let params = null;
 
@@ -215,54 +200,56 @@ class RecordBloodSugarContainer extends Component {
         const title = '혈당 입력';
         const btnType = 'end';
         let valid = false;
-        if(bloodSugarVal < range.min){
-            utils.showAlert(title,'혈당은 '+ range.min + 'mmHg 미만일 수 없습니다.', btnType);
-        } else if(bloodSugarVal > range.max){
-            utils.showAlert(title,'혈당은 '+ range.max + 'mmHg를 초과할 수 없습니다.', btnType); 
+        if (bloodSugarVal < range.min) {
+            utils.showAlert(title, '혈당은 ' + range.min + 'mmHg 미만일 수 없습니다.', btnType);
+        } else if (bloodSugarVal > range.max) {
+            utils.showAlert(title, '혈당은 ' + range.max + 'mmHg를 초과할 수 없습니다.', btnType);
         } else {
             valid = true;
         }
 
-        if(!valid) return;
+        if (!valid) return;
 
         // 입력 또는 수정 전의 값 선언
-        if('Y' === bloodSugar.get('mealYn')) {
+        if ('Y' === bloodSugar.get('mealYn')) {
             prevVal = bloodSugar.get('bloodSugarAfterMeal')
         } else {
             prevVal = bloodSugar.get('bloodSugarBeforeMeal')
         }
 
-        if('N' === bloodSugar.get('mealYn')) {
+        if ('N' === bloodSugar.get('mealYn')) {
             params = [{
-                phrItmDivCd : ServiceConstants.PHR_ITM_DIV_CD_BLOOD_SUGAR_BEFORE_MEAL,
-                phrItmVal : bloodSugar.get('bloodSugar')
+                phrItmDivCd: ServiceConstants.PHR_ITM_DIV_CD_BLOOD_SUGAR_BEFORE_MEAL,
+                phrItmVal: bloodSugar.get('bloodSugar')
             }];
         } else if ('Y' === bloodSugar.get('mealYn')) {
             params = [{
-                phrItmDivCd : ServiceConstants.PHR_ITM_DIV_CD_BLOOD_SUGAR_AFTER_MEAL,
-                phrItmVal : bloodSugar.get('bloodSugar')
+                phrItmDivCd: ServiceConstants.PHR_ITM_DIV_CD_BLOOD_SUGAR_AFTER_MEAL,
+                phrItmVal: bloodSugar.get('bloodSugar')
             }];
         }
 
-        if('' === bloodSugar.get('mealYn')) {
+        if ('' === bloodSugar.get('mealYn')) {
 
             confirmAlert({
-                customUI : ({onClose}) => (
-                    <div className='popup_wrap report'>
+                customUI: ({ onClose }) => (
+                    <div className='popup_wrap active'>
                         <div className='title'>공복/식후를 선택하세요</div>
                         <div className='pop_conts'>
-                            <p className='msg' style={{'fontWeight':'bold'}}>공복이란?</p>
-                            <p className='msg'>기상 후 1시간 이내 또는<br/>식사 후 2시간 이상 경과한 경우</p>
-                            <br/>
-                            <p className='msg' style={{'fontWeight':'bold'}}>식후란?</p>
-                            <p className='msg'>식사 후 2시간 이내인 경우</p>
-                            <ul className='pop_btns'>
-                                <li>
-                                    <button className='btn_middle_red' onClick={onClose}>
-                                        <span>확인</span>
-                                    </button>
-                                </li>
-                            </ul>
+                            <p className="msg">
+                                <b>공복이란?</b><br />
+                        기상 후 1시간 이내 또는<br />
+                        식사 후 2시간 이상 경과한 경우
+                        </p>
+                            <p className="msg">
+                                <b>식후란?</b><br />
+                        식사 후 2시간 이내인 경우
+                        </p>
+                            <div className='pop_btns'>
+                                <button className='btn_middle_red' onClick={onClose}>
+                                    <span>닫기</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 )
@@ -271,54 +258,54 @@ class RecordBloodSugarContainer extends Component {
         } else {
 
             try {
-    
-                if('create' === inputType) {
+
+                if ('create' === inputType) {
                     // PHR 개별 입력 API 호출
                     const postInputPhrDataAPI = this.postInputPhrDataAPI(params);
-        
+
                     postInputPhrDataAPI.then((response) => {
-        
-                        if(undefined !== response[0] && 200 === response[0].status) {
-                            
-                            if('' === prevVal) {
+
+                        if (undefined !== response[0] && 200 === response[0].status) {
+
+                            if ('' === prevVal) {
                                 // 메인 페이지에서의 입력 성공
                                 window.location.href = '/activity';
                             } else {
                                 // 상세 페이지에서의 입력 성공
                                 window.location.href = '/activity/detailBloodSugar';
                             }
-        
+
                         } else {
                             console.log('API request fail : ', response[0]);
                         }
-        
+
                     });
                 } else if ('modify' === inputType) {
                     // PHR 개별 수정 API 호출
                     const putInputPhrDataAPI = this.putInputPhrDataAPI(params);
-        
+
                     putInputPhrDataAPI.then((response) => {
-    
+
                         console.log(response[0]);
-        
-                        if(undefined !== response[0] && 200 === response[0].status) {
-        
+
+                        if (undefined !== response[0] && 200 === response[0].status) {
+
                             // 성공 시 페이지 이동
                             window.location.href = '/activity/detailBloodSugar';
-        
+
                         } else {
                             console.log('API request fail : ', response[0]);
                         }
-        
+
                     });
                 }
-    
+
             } catch (error) {
                 console.log('error : ', error);
             }
 
         }
-            
+
     }
 
     /**
@@ -342,41 +329,41 @@ class RecordBloodSugarContainer extends Component {
      */
     RemoveBloodSugarValue = () => {
 
-        const {bloodSugar} = this.props;
+        const { bloodSugar } = this.props;
         let params = null;
 
-        if('N' === bloodSugar.get('mealYn')) {
+        if ('N' === bloodSugar.get('mealYn')) {
             params = [{
-                phrItmDivCd : ServiceConstants.PHR_ITM_DIV_CD_BLOOD_SUGAR_BEFORE_MEAL,
-                phrItmVal : bloodSugar.get('bloodSugar')
+                phrItmDivCd: ServiceConstants.PHR_ITM_DIV_CD_BLOOD_SUGAR_BEFORE_MEAL,
+                phrItmVal: bloodSugar.get('bloodSugar')
             }];
         } else if ('Y' === bloodSugar.get('mealYn')) {
             params = [{
-                phrItmDivCd : ServiceConstants.PHR_ITM_DIV_CD_BLOOD_SUGAR_AFTER_MEAL,
-                phrItmVal : bloodSugar.get('bloodSugar')
+                phrItmDivCd: ServiceConstants.PHR_ITM_DIV_CD_BLOOD_SUGAR_AFTER_MEAL,
+                phrItmVal: bloodSugar.get('bloodSugar')
             }];
         }
 
         try {
-                // PHR 개별 삭제 API 호출
-                const deleteInputPhrDataAPI = this.deleteInputPhrDataAPI(params);
-    
-                deleteInputPhrDataAPI.then((response) => {
-    
-                    if(undefined !== response[0] && 200 === response[0].status) {
-    
-                        // 성공 시 activity 페이지로 이동
-                        window.location.href = '/activity/detailBloodSugar';
-    
-                    } else {
-                        console.log('API request fail : ', response[0]);
-                    }
-    
-                });
+            // PHR 개별 삭제 API 호출
+            const deleteInputPhrDataAPI = this.deleteInputPhrDataAPI(params);
 
-            } catch(error) {
-                console.log('error : ', error);
-            }
+            deleteInputPhrDataAPI.then((response) => {
+
+                if (undefined !== response[0] && 200 === response[0].status) {
+
+                    // 성공 시 activity 페이지로 이동
+                    window.location.href = '/activity/detailBloodSugar';
+
+                } else {
+                    console.log('API request fail : ', response[0]);
+                }
+
+            });
+
+        } catch (error) {
+            console.log('error : ', error);
+        }
 
     }
 
@@ -412,23 +399,28 @@ class RecordBloodSugarContainer extends Component {
 
     render() {
 
-        const { bloodSugar, inputType } = this.props;
+        const { bloodSugar, inputType, slideRulerType, ActivityPhrActions } = this.props;
         const mealYn = bloodSugar.get('mealYn');
         let bloodSugarVal = bloodSugar.get('bloodSugar');
 
+        if('bloodSugar' !== slideRulerType) {
+            ActivityPhrActions.setSlideRulerType({
+                slideRulerType : 'bloodSugar'
+            });
+        }
+
         return (
             <Fragment>
-                <RecordBloodSugar 
+                <RecordBloodSugar
                     bloodSugar={bloodSugarVal}
                     inputType={inputType}
-                    mealYn = {mealYn}
-                    onChangeInputValue ={this.handleChangeInputValue}
-                    onRecordBloodSugarScroll = {this.handleRecordBloodSugarScroll}
-                    onResetBloodSugarValue = {this.handleResetBloodSugarValue}
-                    onRecordBloodSugar = {this.handleRecordBloodSugar}
-                    onMealYN = {this.handleMealYN}
-                    onClickRemoveBtn = {this.handleClickRemoveBtn}
-                    />
+                    mealYn={mealYn}
+                    onChangeInputValue={this.handleChangeInputValue}
+                    onResetBloodSugarValue={this.handleResetBloodSugarValue}
+                    onRecordBloodSugar={this.handleRecordBloodSugar}
+                    onMealYN={this.handleMealYN}
+                    onClickRemoveBtn={this.handleClickRemoveBtn}
+                />
             </Fragment>
         );
     }
@@ -438,10 +430,12 @@ export default connect(
     (state) => ({
         inputType: state.recordBloodSugar.get('inputType'),
         bloodSugar: state.recordBloodSugar,
-        prevVal1 : state.activityPhr.get('bloodSugarBeforeMeal'),
-        prevVal2 : state.activityPhr.get('bloodSugarAfterMeal')
+        prevVal1: state.activityPhr.get('bloodSugarBeforeMeal'),
+        prevVal2: state.activityPhr.get('bloodSugarAfterMeal'),
+        slideRulerType : state.activityPhr.get('slideRulerType')
     }),
     (dispatch) => ({
-        RecordBloodSugarActions: bindActionCreators(recordBloodSugarActions, dispatch)
+        RecordBloodSugarActions: bindActionCreators(recordBloodSugarActions, dispatch),
+        ActivityPhrActions: bindActionCreators(activityPhrActions, dispatch)
     })
 )(RecordBloodSugarContainer);

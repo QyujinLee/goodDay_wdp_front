@@ -27,7 +27,7 @@ class MissionTimer extends Component {
         const {misnDtlSrno, handleClose, handleSave}  = this.props;
 
         let contents = {};
-        // debugger;
+
         if(ServiceConstants.MISN_DTL_SRNO_WEIGHT_WALK_START <= misnDtlSrno 
             && misnDtlSrno <= ServiceConstants.MISN_DTL_SRNO_WEIGHT_WALK_END) {//30분간 산책하기 7회
             contents.title = '30분간 산책';

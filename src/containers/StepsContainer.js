@@ -36,7 +36,8 @@ class StepsContainer extends Component {
     extSetStepsData(param) {
      
         const { StepsActions, PatternActions } = this.props;
-
+        
+        param.regDtm = utils.getUserInfo().regDtm;
         const getStepsData = this.getStepsDataAPI(param);
 
         //stepsData Redux set
@@ -87,7 +88,7 @@ class StepsContainer extends Component {
         const { StepsActions } = this.props;
 
         let getStepsRanking = ''
-
+        
         const params = {
             fromDate: param.fromDate
         }

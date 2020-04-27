@@ -77,81 +77,11 @@ class HealthReportDetailView extends Component {
     }
 
 
-    getArwStyle(scope, value) {
-
-        // style left 값을 구하기 위한 left변수, 정상범위의 사이 값, 사용자의 실제 데이터 값, 범위 갯수 변수 선언
-        let left = 0;
-        let scopeTerm = 0;
-        let scopeTermNormal = 0;
-        let userValue = Math.abs(value);
-        const scopeLength = scope.length;
-
-        //화면 비율에 맞는 left값을 조정하기 위한 설정 
-        const clientWidth = document.body.clientWidth;
-
-        const Totalbar = clientWidth - 80
-
-        scope.forEach(element => {
-
-            scopeTermNormal = (ServiceConstants.REF_NCL_DIV_CD_NORMAL === element.refNclDivCd && undefined !== element.endVal ? element.endVal - element.strVal : element.strVal);
-            scopeTerm = (ServiceConstants.REF_NCL_DIV_CD_CAUTION === element.refNclDivCd ? Math.abs(element.endVal) - Math.abs(element.strVal) : Math.abs(element.strVal));
-
-            /* eslint-disable*/
-            if (eval(element.strVal + element.strSymbNm + userValue)
-                && eval(element.endVal ? userValue + element.strSymbNm + element.endVal : 1)) {
-
-                if (userValue === element.strVal) {
-                    userValue = userValue + 0.0000001;
-                }
-                if (ServiceConstants.REF_NCL_DIV_CD_NORMAL === element.refNclDivCd) {
-
-                    //정상
-                    left = (40 + ((userValue) / element.strVal) * Totalbar / scopeLength);
-
-                    if ('<=' === element.strSymbNm || '<' === element.strSymbNm) {
-                        left = ((element.strVal / userValue) * Totalbar / scopeLength);
-                        if (scopeTermNormal !== 0) {
-                            left = 40 + ((userValue - element.strVal) / (scopeTermNormal)) * ((Totalbar / scopeLength));
-                        }
-                        if(0>element.strVal){
-                            left = (40 + (Math.abs(userValue) / Math.abs(element.strVal)) * Totalbar / scopeLength);
-                        }
-                    }
-
-                } else if (ServiceConstants.REF_NCL_DIV_CD_CAUTION === element.refNclDivCd) {
-
-                    //주의 or 비만                                             
-                    left = (((Totalbar / scopeLength) + 40) + (userValue - (element.strVal)) / (scopeTerm) * Totalbar / scopeLength);
-
-                } else if (ServiceConstants.REF_NCL_DIV_CD_DANGER === element.refNclDivCd) {
-
-                    left = 40 + (Totalbar / scopeLength * (scopeLength - 1))
-                    //위험 or 고도비만
-                    left = ((((Totalbar / scopeLength) * (scopeLength - 1)) + 40) + (userValue - (element.strVal)) / (scopeTerm) * Totalbar / scopeLength);
-                    if ('>=' === element.strSymbNm || '>' === element.strSymbNm) {
-                        left = ((((Totalbar / scopeLength) * (scopeLength - 1)) + 40) + ((element.strVal) - userValue) / (scopeTerm) * Totalbar / scopeLength);
-                        if(0>element.strVal){
-                            left = ((((Totalbar / scopeLength) * (scopeLength - 1)) + 40) + (Math.abs(userValue) - Math.abs(element.strVal)) / (scopeTerm) * Totalbar / scopeLength);
-                        }
-                    }
-                }
-            }
-        });
-
-        if (40 >= left) {
-            return 40;
-        } else if (40 + Totalbar < left) {
-            return 40 + Totalbar;
-        } else {
-            return left
-        }
-
-    }
     render() {
 
         const { contents, bodyAverage, normalScope, examination, message, diffYear } = this.props; // props data
         const { onHealthReportContentsToggle, onHealthReportMoveTrend } = this.props; // props event
-
+    
         let mediExamArea = null;
         let mediExamTitleArea = null;
         let mediExamChartArea = null;
@@ -179,7 +109,6 @@ class HealthReportDetailView extends Component {
             mediExamChartArea = (
                 <div className='tg_conts'>
                     <p className='msg_txt tip'>{contents.subTitle} <span className='bold'>꿀팁</span></p>
-                    {/* {ServiceConstants.MEDI_EXAM_ITM_DIV_CD_HDL === contents.mediExamItmDivCd[0] ? ( */}
                     {
                         0 < message.length ? (
                             <div className='tip_bx'>
@@ -212,7 +141,7 @@ class HealthReportDetailView extends Component {
                                         })
                                     }
                                 </ul>
-                                <div className='value_arw' style={{ width: '30px', textAlign: 'center', marginLeft: '-15px', left: + this.getArwStyle(normalScope, firstValue.mediExamItmVal) + 'px' }}>{utils.numberFixed(firstValue.mediExamItmVal, true)}</div>
+                                <div className='value_arw' style={{ width: '30px', textAlign: 'center', marginLeft: '-15px', left: + utils.getChartArwStyle(normalScope, firstValue.mediExamItmVal) + 'px' }}>{utils.numberFixed(firstValue.mediExamItmVal, true)}</div>
                                 <ol className='label_lst'>
                                     {
                                         normalScope.map((item, index) => {

@@ -1,11 +1,13 @@
 import React, { Component, Fragment } from 'react';
+import SlideRuler from 'components/SlideRulerComponent';
 
 class InputBodyAgeHeight extends Component {
 
     render() {
 
         const { inputBodyAge } = this.props; // props data
-        const { onClickConfirmBtn, onBodyAgeScroll, onChangeInputValue, onClosed } = this.props; // props event
+        const { onClickConfirmBtn, onChangeInputValue, onClosed } = this.props; // props event
+        const height = inputBodyAge.get('height');
 
         return (
             <Fragment>
@@ -24,7 +26,7 @@ class InputBodyAgeHeight extends Component {
                             <span className='noti'>키를 입력하세요</span>
                             <div className='input_bx'>
                                 <input type='tel' id='inp_txt' className='inp_txt height'
-                                    value={inputBodyAge.get('height')} onChange={onChangeInputValue}
+                                    value={height} onChange={onChangeInputValue}
                                 />
                                 <label htmlFor='inp_txt'>cm</label>
                             </div>
@@ -38,21 +40,10 @@ class InputBodyAgeHeight extends Component {
 
                         <div className='value_scroll height'>
                             <div className='value_tooltip'>
-                                <span>{inputBodyAge.get('height')}</span>
+                                <span>{height}</span>
                             </div>
-                            <div className='h_range_slider' onScroll={onBodyAgeScroll}>
-                                <div className='range_measure'>
-                                    <ul className='measure_num'>
-                                        <li>0</li>
-                                        <li>30</li>
-                                        <li>70</li>
-                                        <li>110</li>
-                                        <li>150</li>
-                                        <li>190</li>
-                                        <li>230</li>
-                                        <li>270</li>
-                                    </ul>
-                                </div>
+                            <div className='h_range_slider'>
+                                <SlideRuler currentValue={height}/>
                             </div>
                             <span className='point'></span>
                         </div>

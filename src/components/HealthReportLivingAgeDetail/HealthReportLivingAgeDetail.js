@@ -16,9 +16,9 @@ class HealthReportLivingAgeDetail extends Component {
 
     render() {
 
-        const { livingAge, livingAgeDetail, date } = this.props; // props data
+        const { livingAge, livingAgeDetail, selectDate } = this.props; // props data
         const { onClosed } = this.props; // props event
-        
+
         return (
             <Fragment>
                 <header className='header normal'>
@@ -31,7 +31,7 @@ class HealthReportLivingAgeDetail extends Component {
                 </header>
                 <div className='contents'>
                     <div className='detail_compare_wrap'>
-                    <p className='detail_noti'>검진일 {utils.momentDateFormat(date)}을 기준으로 한 결과 입니다.</p>
+                        <p className='detail_noti'>검진일 {selectDate.mediExamDt}을 기준으로 한 결과 입니다.</p>
                         <div className='detail_age_bx'>
                             <dl>
                                 <dt>실제나이</dt>

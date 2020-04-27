@@ -16,7 +16,7 @@ class BodyAgeDetailView extends Component {
 
             if (1 === index) {
                 if (ServiceConstants.REF_NCL_DIV_CD_CAUTION === item.refNclDivCd) {
-                 
+
                     if (firstValue > secondValue) {
                         firstValue = item.endVal;
                         secondValue = item.strVal;
@@ -24,7 +24,7 @@ class BodyAgeDetailView extends Component {
                         firstValue = item.strVal
                         secondValue = item.endVal;
                     }
-                    
+
                 }
 
                 if ('normal' === state) {
@@ -53,74 +53,9 @@ class BodyAgeDetailView extends Component {
         }
     }
 
-    getArwStyle(scope, value) {
-
-        // style left 값을 구하기 위한 left변수, 정상범위의 사이 값, 사용자의 실제 데이터 값, 범위 갯수 변수 선언
-        let left = 0;
-        let scopeTerm = 0;
-        let scopeTermNormal = 0;
-        let userValue = value;
-        const scopeLength = scope.length;
-
-        //화면 비율에 맞는 left값을 조정하기 위한 설정 
-        const clientWidth = document.body.clientWidth;
-
-        const Totalbar = clientWidth - 80
-    
-        scope.forEach(element => {
-
-            scopeTermNormal = (ServiceConstants.REF_NCL_DIV_CD_NORMAL === element.refNclDivCd && undefined !== element.endVal ? element.endVal - element.strVal : element.strVal);
-            scopeTerm = (ServiceConstants.REF_NCL_DIV_CD_CAUTION === element.refNclDivCd ? element.endVal - element.strVal : element.strVal);
-
-            /* eslint-disable*/
-            if (eval(element.strVal + element.strSymbNm + userValue)
-                && eval(element.endVal ? userValue + element.strSymbNm + element.endVal : 1)) {
-
-                if (userValue === element.strVal) {
-                    userValue = userValue + 0.0000001;
-                }
-                if (ServiceConstants.REF_NCL_DIV_CD_NORMAL === element.refNclDivCd) {
-
-                    //정상
-                    left = (40 + ((userValue) / element.strVal) * Totalbar / scopeLength);
-                   
-                    if ('<=' === element.strSymbNm || '<' === element.strSymbNm) {
-                        left = ((element.strVal / userValue) * Totalbar / scopeLength);
-                        if (scopeTermNormal !== 0) {
-                            left = 40 + ((userValue - element.strVal) / (scopeTermNormal)) * ((Totalbar / scopeLength));
-                        }
-                    }
-
-                } else if (ServiceConstants.REF_NCL_DIV_CD_CAUTION === element.refNclDivCd) {
-                      
-                    //주의 or 비만                                             
-                    left = (((Totalbar / scopeLength) + 40) + (userValue - (element.strVal)) / (scopeTerm) * Totalbar / scopeLength);
-            
-                } else if (ServiceConstants.REF_NCL_DIV_CD_DANGER === element.refNclDivCd) {
-                    
-                    left = 40 + (Totalbar / scopeLength * (scopeLength-1))
-                    //위험 or 고도비만
-                  left =((((Totalbar/scopeLength)*(scopeLength-1))+40)+ (userValue -(element.strVal))/(scopeTerm)*Totalbar/scopeLength);
-                    if ('>=' === element.strSymbNm || '>' === element.strSymbNm) {
-                        left = ((((Totalbar / scopeLength) * (scopeLength-1)) + 40) + ((element.strVal) - userValue) / (scopeTerm) * Totalbar / scopeLength);
-                      
-                    }
-                }
-            }
-        });
-   
-        if(40>=left){
-            return 40;
-        }else if(40+Totalbar<left){
-            return 40+Totalbar;
-        }else{
-            return left
-        }
-
-    }
     render() {
 
-        const { contents, normalScope, examination ,diffYear} = this.props; // props data
+        const { contents, normalScope, examination, diffYear } = this.props; // props data
         const { onBodyAgeToggle, onBodyAgeMoveTrend } = this.props; // props event
 
         let bodyAgeArea = null;
@@ -178,7 +113,7 @@ class BodyAgeDetailView extends Component {
                                     })
                                 }
                             </ul>
-                            <div className='value_arw' style={{ width:'30px',textAlign:'center',marginLeft:'-15px', left: + this.getArwStyle(normalScope, undefined !== firstValue.calLbdyAge ? firstValue.calLbdyAge : firstValue.bmi) + 'px' }}>{utils.numberFixed(undefined !== firstValue.calLbdyAge ? firstValue.calLbdyAge : firstValue.bmi, true)}</div>
+                            <div className='value_arw' style={{ width: '30px', textAlign: 'center', marginLeft: '-15px', left: + utils.getChartArwStyle(normalScope, undefined !== firstValue.calLbdyAge ? firstValue.calLbdyAge : firstValue.bmi) + 'px' }}>{utils.numberFixed(undefined !== firstValue.calLbdyAge ? firstValue.calLbdyAge : firstValue.bmi, true)}</div>
                             <ol className='label_lst'>
                                 {
                                     normalScope.map((item, index) => {
@@ -218,7 +153,7 @@ class BodyAgeDetailView extends Component {
                 // 키/몸무게
                 bodyAgeTitleDivArea = (
                     <Fragment>
-                        <b>{'' !== mineheight ? utils.numberFixed(mineheight, true) : ''}</b> {'' !== mineheight ? firstValue.unitDivCdNm : ''}{'' !== mineWeight?'/':''} <b>{'' !== mineWeight ?utils.numberFixed(mineWeight, true) : ''}</b> {'' !== mineWeight ? secondValue.unitDivCdNm : ''}
+                        <b>{'' !== mineheight ? utils.numberFixed(mineheight, true) : ''}</b> {'' !== mineheight ? firstValue.unitDivCdNm : ''}{'' !== mineWeight ? '/' : ''} <b>{'' !== mineWeight ? utils.numberFixed(mineWeight, true) : ''}</b> {'' !== mineWeight ? secondValue.unitDivCdNm : ''}
                     </Fragment>
                 );
 

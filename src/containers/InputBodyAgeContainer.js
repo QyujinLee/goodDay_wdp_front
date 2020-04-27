@@ -13,12 +13,13 @@ import * as utils from 'lib/utils';
 import * as ServiceConstants from 'constants/serviceConstants';
 
 import * as inputBodyAgeActions from 'modules/inputBodyAge';
+import * as activityPhrActions from 'modules/activityPhr';
 
 class InputBodyAgeContainer extends Component {
 
     componentDidMount() {
 
-        const { misnDtlSrno, InputBodyAgeActions } = this.props;
+        const { misnDtlSrno, InputBodyAgeActions, ActivityPhrActions } = this.props;
 
         utils.extApp('04');
         utils.extApp('05', 'Success');
@@ -26,46 +27,92 @@ class InputBodyAgeContainer extends Component {
         // 몸무게 입력 7회 미션 진입 시
         if('' !== misnDtlSrno && ServiceConstants.MISN_DTL_SRNO_WEIGHT_INPUT_START <= misnDtlSrno 
             && ServiceConstants.MISN_DTL_SRNO_WEIGHT_INPUT_END >= misnDtlSrno) {
+
+            // 줄자 타입 설정
+            ActivityPhrActions.setSlideRulerType({
+                slideRulerType : 'weight'
+            });
             
-            document.querySelector('.h_range_slider').scrollLeft = utils.getScrollPosition(utils.getBodyAgeDefaultValue('bodyWeight'));
+            InputBodyAgeActions.setInputBodyAgeWeight({
+                bodyWeight: utils.getBodyAgeDefaultValue('bodyWeight')
+            });
 
             InputBodyAgeActions.setInputBodyAgeType({
                 ageType: 'weight'
             });
 
         } else {
+
             // 신장 기본 Set
-            document.querySelector('.h_range_slider').scrollLeft = utils.getScrollPosition(utils.getBodyAgeDefaultValue('height'));
+            InputBodyAgeActions.setInputBodyAgeHeight({
+                height: utils.getBodyAgeDefaultValue('height')
+            });
         }
     }
 
     componentDidUpdate(prevProps, prevState) {
+        const { InputBodyAgeActions, slideRulerType } = this.props;
 
-        
-
-        const prevBodyAge = prevProps.inputBodyAge;
         const nextBodyAge = this.props.inputBodyAge;
-        const prevAgeType = prevBodyAge.get('ageType');
-        const nextAgeType = nextBodyAge.get('ageType');
-
+        const prevAgeType = prevProps.inputBodyAge.get('ageType');
+        const nextAgeType = this.props.inputBodyAge.get('ageType');
+        const prevHeight = prevProps.inputBodyAge.get('height');
+        const nextHeight = this.props.inputBodyAge.get('height');
+        const prevWeight = prevProps.inputBodyAge.get('bodyWeight');
+        const nextWeight = this.props.inputBodyAge.get('bodyWeight');
+        const prevWaist = prevProps.inputBodyAge.get('waistCircum');
+        const nextWaist = this.props.inputBodyAge.get('waistCircum');
+        const prevHip = prevProps.inputBodyAge.get('hipCircum');
+        const nextHip = this.props.inputBodyAge.get('hipCircum');
+        
         // ageType 변경 시에만 실행
         if (prevAgeType !== nextAgeType) {
             let type = 'height';
             let value = 0;
             if('height' === nextAgeType){
                 type = 'height';
+                value = nextBodyAge.get(type) === '' ? utils.getBodyAgeDefaultValue(type) : Number(nextBodyAge.get(type));
+
+                InputBodyAgeActions.setInputBodyAgeHeight({
+                    height: value
+                });
+
             } else if('weight' === nextAgeType){
                 type = 'bodyWeight';
+                value = nextBodyAge.get(type) === '' ? utils.getBodyAgeDefaultValue(type) : Number(nextBodyAge.get(type));
+
+                InputBodyAgeActions.setInputBodyAgeWeight({
+                    bodyWeight: value
+                });
+
             } else if('waist' === nextAgeType){
                 type = 'waistCircum';
+                value = nextBodyAge.get(type) === '' ? utils.getBodyAgeDefaultValue(type) : Number(nextBodyAge.get(type));
+
+                InputBodyAgeActions.setInputBodyAgeWaist({
+                    waistCircum: value
+                });
+
             } else if('hip' === nextAgeType) {
                 type = 'hipCircum';
-            } 
+                value = nextBodyAge.get(type) === '' ? utils.getBodyAgeDefaultValue(type) : Number(nextBodyAge.get(type));
 
-            value = nextBodyAge.get(type) === '' ? utils.getBodyAgeDefaultValue(type) : Number(nextBodyAge.get(type));
-            document.querySelector('.h_range_slider').scrollLeft = utils.getScrollPosition(value);
+                InputBodyAgeActions.setInputBodyAgeHip({
+                    hipCircum: value
+                });
 
-        } 
+            }
+            
+            // 페이지 타입과 줄자 타입이 같을 때만 캐릭터 조정
+            if(nextAgeType === slideRulerType) {
+                this.handleScroll();
+            }
+        }
+
+        // 스크롤 제어
+        if(prevHeight !== nextHeight || prevWeight !== nextWeight || prevWaist !== nextWaist || prevHip !== nextHip) {
+            this.handleScroll();
+        }
     }
 
     /**
@@ -225,7 +272,7 @@ class InputBodyAgeContainer extends Component {
      */
     handleClickBackBtn = (e) => {
 
-        const {misnDtlSrno, InputBodyAgeActions} = this.props;
+        const {misnDtlSrno, InputBodyAgeActions, ActivityPhrActions} = this.props;
 
         // 몸무게 입력 미션을 통해 진입 시
         if(ServiceConstants.MISN_DTL_SRNO_WEIGHT_INPUT_START <= misnDtlSrno 
@@ -241,6 +288,11 @@ class InputBodyAgeContainer extends Component {
             utils.showAlert(title, msg, btnType, callback);
 
         } else {
+
+            // 줄자 타입 설정
+            ActivityPhrActions.setSlideRulerType({
+                slideRulerType : e.target.getAttribute('pretype')
+            });
 
             // '뒤로 돌아가기' 버튼 클릭 시, 표출할 inputBodyAgeArea 설정
             InputBodyAgeActions.setInputBodyAgeType({
@@ -290,7 +342,7 @@ class InputBodyAgeContainer extends Component {
      */
     handleClickConfirmBtn = (e) => {
 
-        const { InputBodyAgeActions, inputBodyAge, misnSrno, ffmDt, misnDtlSrno, misnHstSrno } = this.props;
+        const { InputBodyAgeActions, ActivityPhrActions, inputBodyAge, misnSrno, ffmDt, misnDtlSrno, misnHstSrno } = this.props;
 
         if(this.inputValueValidation(inputBodyAge)) { // 입력 값 유효성 검사
 
@@ -405,19 +457,31 @@ class InputBodyAgeContainer extends Component {
                         }
 
                     } else {
+                        
+                        // 줄자 타입 설정
+                        ActivityPhrActions.setSlideRulerType({
+                            slideRulerType : nextType
+                        });
 
                         // '확인' 버튼 클릭 시, 표출할 inputBodyAgeArea 설정
                         InputBodyAgeActions.setInputBodyAgeType({
                             ageType: nextType
                         });
+
                     }
 
                 } else { // 완료 또는 몸무게 제외 확인 버튼 클릭 시
+
+                    // 줄자 타입 설정
+                    ActivityPhrActions.setSlideRulerType({
+                        slideRulerType : nextType
+                    });
 
                     // '확인' 버튼 클릭 시, 표출할 inputBodyAgeArea 설정
                     InputBodyAgeActions.setInputBodyAgeType({
                         ageType: nextType
                     });
+
                 }
 
             } else { // ! 레포트의 비만체형나이 입력을 통해 진입
@@ -428,6 +492,11 @@ class InputBodyAgeContainer extends Component {
                     this.postPhrBodyAnalysisProcess();
 
                 } else {
+
+                    // 줄자 타입 설정
+                    ActivityPhrActions.setSlideRulerType({
+                        slideRulerType : nextType
+                    });
 
                     // '확인' 버튼 클릭 시, 표출할 inputBodyAgeArea 설정
                     InputBodyAgeActions.setInputBodyAgeType({
@@ -502,6 +571,33 @@ class InputBodyAgeContainer extends Component {
         if(Number(value) >= range.min && Number(value) <= range.max ){
             document.querySelector('.h_range_slider').scrollLeft = utils.getScrollPosition(value);
         }
+    }
+
+    /**
+     * 스크롤 제어
+     */
+    handleScroll = () => {
+        const { slideRulerType } = this.props;
+        let active = true;
+
+        if('height' === slideRulerType) {
+            this.changeCharacterHeight();
+        } else if ('weight' === slideRulerType) {
+            this.changeCharacterWeight();
+        } else if ('waist' === slideRulerType) {
+            this.changeCharacterWaist();
+        } else if ('hip' === slideRulerType) {
+            this.changeCharacterHip();
+        }
+
+        this.activeRuler(active);
+    
+        clearTimeout(this.scrollTimer);
+        this.scrollTimer = setTimeout(function() {
+            active = false;
+            this.activeRuler(active);
+        }.bind(this), 250);
+        active = true;
     }
 
     scrollTimer = null;
@@ -615,18 +711,27 @@ class InputBodyAgeContainer extends Component {
      * @param num
      * @returns {void}
      */
-    changeCharacterHeight(nowScroll, gab) {
-
-        const minX = utils.getScrollPosition(130); //130이하 스크롤값
-        const maxX = utils.getScrollPosition(190); //190이상 스크롤값
+    changeCharacterHeight() {
+        const {inputBodyAge} = this.props;
+        const height = inputBodyAge.get('height');
+        
+        const minX = 130; //캐릭터 최소 크기 변경 시점 값
+        const maxX = 190; //캐릭터 최대 크기 변경 시점 값
         const hPer = 100 / (maxX - minX); //range 퍼센트 환산
         const myHead = document.querySelector('.my_character .head');
 
         let curPer = 0; //현재 신장 percent
+        let gab = 0;
 
-        if (nowScroll < minX) {
+        if (height > minX) {
+            gab = height - minX;
+        } else {
+            gab = minX - height;
+        }
+        
+        if (height < minX) {
             curPer = 0;
-        } else if (nowScroll > maxX) {
+        } else if (height > maxX) {
             curPer = 100;
         } else {
             curPer = gab * hPer;
@@ -641,10 +746,12 @@ class InputBodyAgeContainer extends Component {
      * @param num
      * @returns {void}
      */
-    changeCharacterWeight(nowScroll) {
+    changeCharacterWeight() {
         const {inputBodyAge} = this.props;
-        const minX = utils.getScrollPosition(25); //25이하 스크롤값
-        const maxX = utils.getScrollPosition(120); //120이상 스크롤값
+        const weight = inputBodyAge.get('bodyWeight');
+
+        const minX = 25; //25이하 스크롤값
+        const maxX = 120; //120이상 스크롤값
         const hPer = 100 / (maxX - minX); //range 퍼센트 환산
         const myHead = document.querySelector('.my_character .head');
         const minPer = 133 / 250;
@@ -653,12 +760,13 @@ class InputBodyAgeContainer extends Component {
         const marginLft = -(myHead.offsetWidth / 2);
         
         let posHead = myHead.offsetBottom;
-        const gab = nowScroll - minX;
+        const gab = weight - minX;
         let curPer = 1; //현재 체중 percent
         curPer = minPer + (rangePer / 100 * (gab * hPer));
-        const curW = inputBodyAge.get('bodyWeight') === '' ? utils.getBodyAgeDefaultValue('bodyWeight') : inputBodyAge.get('bodyWeight');
+        const curW = weight === '' ? utils.getBodyAgeDefaultValue('bodyWeight') : weight;
 
-        const face = document.querySelector('.face'); 
+        const face = document.querySelector('.face');
+
         if( curW < 25) {
             face.classList.add('thin');
             curPer = minPer;
@@ -688,18 +796,19 @@ class InputBodyAgeContainer extends Component {
      * @param nowScroll
      * @returns {void}
      */
-    changeCharacterWaist(nowScroll) {
-
+    changeCharacterWaist() {
         const {inputBodyAge} = this.props;
-        const maxX = utils.getScrollPosition(100); //100cm 이상 스크롤값
-        const minX = utils.getScrollPosition(50); //50cm 이상 스크롤값
+        const waist = inputBodyAge.get('waistCircum');
+
+        const maxX = 100; //100cm 이상 스크롤값
+        const minX = 50; //50cm 이상 스크롤값
         const hPer = 100 / (maxX - minX); //range 퍼센트 환산
         const myHead = document.querySelector('.my_character .head');
-        const curInch = inputBodyAge.get('waistCircum') === '' ? utils.getBodyAgeDefaultValue('waistCircum') : inputBodyAge.get('waistCircum');
+        const curInch = waist === '' ? utils.getBodyAgeDefaultValue('waistCircum') : waist;
         const minPer = 133 / myHead.offsetWidth;
         const maxPer = 222 / myHead.offsetWidth;
         const rangePer = maxPer - minPer;
-        const gab = nowScroll - minX;
+        const gab = waist - minX;
         
         let curPer = 1; /*현재 waist percent*/
         curPer = minPer + (rangePer / 100 * (gab * hPer));
@@ -741,17 +850,19 @@ class InputBodyAgeContainer extends Component {
      * @param num
      * @returns {void}
      */
-    changeCharacterHip(nowScroll) {
+    changeCharacterHip() {
+        const {inputBodyAge} = this.props;
+        const hip = inputBodyAge.get('hipCircum');
 
-        const maxX = utils.getScrollPosition(100); //100cm 이상 스크롤값
-        const minX = utils.getScrollPosition(50); //50cm 이상 스크롤값
+        const maxX = 100; //100cm 이상 스크롤값
+        const minX = 50; //50cm 이상 스크롤값
         const hPer = 100 / (maxX - minX); //range 퍼센트 환산
         const myHead = document.querySelector('.my_character .head');
-        const curInch = utils.getValueByScrollPosition(nowScroll);
+        const curInch = hip === '' ? utils.getBodyAgeDefaultValue('hipCircum') : hip;
         const minPer = 133 / myHead.offsetWidth;
         const maxPer = 222 / myHead.offsetWidth;
         const rangePer = maxPer - minPer;
-        const gab = nowScroll - minX;
+        const gab = hip - minX;
 
         let curPer = 1; /*현재 waist percent*/
         curPer = minPer + (rangePer / 100 * (gab * hPer));
@@ -824,8 +935,6 @@ class InputBodyAgeContainer extends Component {
         }
     }
     
-    
-
     /**
      * 건강검진 비만 체형 나이 포인트
      * @param nowScroll
@@ -930,7 +1039,7 @@ class InputBodyAgeContainer extends Component {
 
     render() {
 
-        const { inputBodyAge, misnDtlSrno } = this.props;
+        const { inputBodyAge, misnDtlSrno, ActivityPhrActions } = this.props;
 
         const ageType = inputBodyAge.get('ageType');
 
@@ -943,53 +1052,58 @@ class InputBodyAgeContainer extends Component {
         }
 
         if ('height' === ageType) {
+            
+            // 줄자 타입 설정
+            ActivityPhrActions.setSlideRulerType({
+                slideRulerType : 'height'
+            });
+
             inputBodyAgeArea = (
                 <InputBodyAgeHeight
                     inputBodyAge={inputBodyAge}
                     onClickConfirmBtn={this.handleClickConfirmBtn}
                     onChangeInputValue={this.handleChangeInputValue}
-                    onBodyAgeScroll={this.handleBodyAgeScroll}
                     onClosed={this.handleClosed}
                 />
             );
+
         } else if ('weight' === ageType) {
+
             inputBodyAgeArea = (
                 <InputBodyAgeWeight
                     inputBodyAge={inputBodyAge}
                     onChangeInputValue={this.handleChangeInputValue}
                     onClickConfirmBtn={this.handleClickConfirmBtn}
                     onClickBackBtn={this.handleClickBackBtn}
-                    onBodyAgeScroll={this.handleBodyAgeScroll}
                     onClosed={this.handleClosed}
                     hideCloseBtnFlag={hideCloseBtnFlag}
-                    onKeyPress={this.handleKeyPress}
-
                 />
             );
+
         } else if ('waist' === ageType) {
+
             inputBodyAgeArea = (
                 <InputBodyAgeWaist
                     inputBodyAge={inputBodyAge}
                     onChangeInputValue={this.handleChangeInputValue}
                     onClickConfirmBtn={this.handleClickConfirmBtn}
                     onClickBackBtn={this.handleClickBackBtn}
-                    onBodyAgeScroll={this.handleBodyAgeScroll}
                     onClosed={this.handleClosed}
-                    onKeyPress={this.handleKeyPress}
                 />
             );
+
         } else if ('hip' === ageType) {
+
             inputBodyAgeArea = (
                 <InputBodyAgeHip
                     inputBodyAge={inputBodyAge}
                     onChangeInputValue={this.handleChangeInputValue}
                     onClickConfirmBtn={this.handleClickConfirmBtn}
                     onClickBackBtn={this.handleClickBackBtn}
-                    onBodyAgeScroll={this.handleBodyAgeScroll}
                     onClosed={this.handleClosed}
-                    onKeyPress={this.handleKeyPress}
                 />
             );
+
         }
 
         return (
@@ -1006,9 +1120,11 @@ export default connect(
         misnSrno : state.mission.get('misnSrno'),
         ffmDt : state.mission.get('ffmDt'),
         misnDtlSrno : state.mission.get('misnDtlSrno'),
-        misnHstSrno : state.mission.get('misnHstSrno')
+        misnHstSrno : state.mission.get('misnHstSrno'),
+        slideRulerType : state.activityPhr.get('slideRulerType')
     }),
     (dispatch) => ({
-        InputBodyAgeActions: bindActionCreators(inputBodyAgeActions, dispatch)
+        InputBodyAgeActions: bindActionCreators(inputBodyAgeActions, dispatch),
+        ActivityPhrActions: bindActionCreators(activityPhrActions, dispatch)
     })
 )(InputBodyAgeContainer);

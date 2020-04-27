@@ -1,11 +1,13 @@
 import React, { Component, Fragment } from 'react';
+import SlideRuler from 'components/SlideRulerComponent';
 
 class InputBodyAgeWaist extends Component {
 
     render() {
 
         const { inputBodyAge } = this.props; // props data
-        const { onClickConfirmBtn, onClickBackBtn, onChangeInputValue, onBodyAgeScroll, onClosed } = this.props; // props event
+        const { onClickConfirmBtn, onClickBackBtn, onChangeInputValue, onClosed } = this.props; // props event
+        const waist = inputBodyAge.get('waistCircum');
 
         return (
             <Fragment>
@@ -26,7 +28,7 @@ class InputBodyAgeWaist extends Component {
                             <span className='noti'>허리둘레를 입력하세요</span>
                             <div className='input_bx'>
                                 <input type='tel' id='inp_txt' className='inp_txt waistCircum'
-                                    value={inputBodyAge.get('waistCircum')} onChange={onChangeInputValue}
+                                    value={waist} onChange={onChangeInputValue}
                                 />
                                 <label htmlFor='inp_txt'>cm</label>
                             </div>
@@ -42,26 +44,10 @@ class InputBodyAgeWaist extends Component {
                         </div>
                         <div className='value_scroll waist'>
                             <div className='value_tooltip'>
-                                <span>{inputBodyAge.get('waistCircum')}</span>
+                                <span>{waist}</span>
                             </div>
-                            <div className='h_range_slider' onScroll={onBodyAgeScroll}>
-                                <div className='range_measure'>
-                                    <ul className='measure_num'>
-                                        <li>0</li>
-                                        <li>20</li>
-                                        <li>40</li>
-                                        <li>60</li>
-                                        <li>80</li>
-                                        <li>100</li>
-                                        <li>120</li>
-                                        <li>140</li>
-                                        <li>160</li>
-                                        <li>180</li>
-                                        <li>200</li>
-                                        <li>220</li>
-                                        <li>240</li>
-                                    </ul>
-                                </div>
+                            <div className='h_range_slider'>
+                                <SlideRuler currentValue={waist}/>
                             </div>
                             <span className='point'></span>
                         </div>

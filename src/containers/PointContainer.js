@@ -52,7 +52,7 @@ class PointContainer extends Component {
 
                 // 미션일 경우 포인트 수령완료 처리
                 if ('' === param.rwdMgmtId) {
-                    
+
                     param.pntRecvYn = 'Y';
                     const putMissionPoint = this.putMissionPointAPI(param);
                     putMissionPoint.then((response) => {
@@ -110,7 +110,7 @@ class PointContainer extends Component {
     * @param param
     * @returns {response}
     */
-   putMissionPointAPI = async (param) => {
+    putMissionPointAPI = async (param) => {
         return await Promise.all(
             [api.putMissionPointAPI(param)]
         );
@@ -136,23 +136,25 @@ class PointContainer extends Component {
         return (
             <Fragment>
                 <div className='popup_wrap point'>
-                    <div className='title'>{'attendance' === type ? '출석체크 EVENT' : ''}</div>
+                    <div className='title'>{'attendance' === type ? '출석체크 EVENT' : '포인트 받기'}</div>
                     <div className='pop_conts'>
                         <div className='tomi_coin'>
                         </div>
-                        {
-                            'attendance' === type ?
-                                (
-                                    <p className='msg_M'>
+                        <p className='msg_M'>
+                            {
+                                'attendance' === type ? (
+                                    <Fragment>
                                         <strong className='highlight'><b><span id='point'></span>P</b> 획득</strong>
                                         매일 매일 출석만해도<br />
                                         포인트가 팡팡팡!
-                                    </p>
-
+                                    </Fragment>
                                 ) : (
-                                    <p className='msg_L'><b><span id='point'></span>P</b>를<br />획득하였습니다.</p>
-                                )
-                        }
+                                        <Fragment>
+                                            <br /><b><span id='point'></span>P</b>를<br />획득하였습니다.<br />
+                                        </Fragment>
+                                    )
+                            }
+                        </p>
                         <div className='pop_btns'>
                             <button className='btn_middle_red' onClick={this.handleClosed}>
                                 {'attendance' === type ? <span>오늘도 하이파이브</span> : <span>확인</span>}

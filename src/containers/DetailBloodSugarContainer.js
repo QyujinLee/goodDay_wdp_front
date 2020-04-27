@@ -129,25 +129,30 @@ class DetailBloodSugarContainer extends Component {
      */
     getStatusClassName(bloodSugar, scope) {
 
-        let statusClassName = null;
+        if(undefined !== bloodSugar && '' !== bloodSugar) {
+            let statusClassName = null;
         
-        scope.forEach((item) => {
+            scope.forEach((item) => {
 
-            /* eslint-disable*/
-            if (eval(item.strVal + item.strSymbNm + bloodSugar) && eval(item.endVal ? bloodSugar + item.strSymbNm + item.endVal : 1)) {
+                /* eslint-disable*/
+                if (eval(item.strVal + item.strSymbNm + bloodSugar) && eval(item.endVal ? bloodSugar + item.strSymbNm + item.endVal : 1)) {
 
-                if (ServiceConstants.REF_NCL_DIV_CD_NORMAL === item.refNclDivCd) {
-                    statusClassName = 'recent_num_info normal';
-                } else if(ServiceConstants.REF_NCL_DIV_CD_CAUTION === item.refNclDivCd) {
-                    statusClassName = 'recent_num_info caution';
-                } else if(ServiceConstants.REF_NCL_DIV_CD_DANGER === item.refNclDivCd) {
-                    statusClassName = 'recent_num_info danger';
+                    if (ServiceConstants.REF_NCL_DIV_CD_NORMAL === item.refNclDivCd) {
+                        statusClassName = 'recent_num_info normal';
+                    } else if(ServiceConstants.REF_NCL_DIV_CD_CAUTION === item.refNclDivCd) {
+                        statusClassName = 'recent_num_info caution';
+                    } else if(ServiceConstants.REF_NCL_DIV_CD_DANGER === item.refNclDivCd) {
+                        statusClassName = 'recent_num_info danger';
+                    }
                 }
-            }
 
-        });
+            });
 
-        return statusClassName;
+            return statusClassName;
+        } else {
+            return ;
+        }
+
     }
 
     /**
@@ -274,21 +279,26 @@ class DetailBloodSugarContainer extends Component {
         const bloodSugarAfterMeal = bloodSugar.get('bloodSugarAfterMeal');
         let statusClassName = 'recent_num_info normal';
         
-        if((bloodSugarBeforeMeal && bloodSugarAfterMeal) && ('' !== bloodSugarBeforeMeal && '' !== bloodSugarAfterMeal) && 'both' === bloodSugar.get('bloodSugarMealFlag')) {
+        // 차트에서 공복 식후 버튼이 둘 다 선택되어 있을 경우
+        if((undefined !== bloodSugarBeforeMeal && undefined !== bloodSugarAfterMeal)
+            && ('' !== bloodSugarBeforeMeal || '' !== bloodSugarAfterMeal)
+            && 'both' === bloodSugar.get('bloodSugarMealFlag')) {
 
             if(latestDateBloodSugarBeforeMeal > latestDateBloodSugarAfterMeal) {
-                statusClassName = this.getStatusClassName(bloodSugarBeforeMeal, scopeBloodSugarBeforeMeal);
+                
+                statusClassName = this.getStatusClassName(bloodSugarBeforeMeal, scopeBloodSugarBeforeMeal, 1);
             } else if(latestDateBloodSugarBeforeMeal < latestDateBloodSugarAfterMeal) {
-                statusClassName = this.getStatusClassName(bloodSugarAfterMeal, scopeBloodSugarBeforeMeal);
+
+                statusClassName = this.getStatusClassName(bloodSugarAfterMeal, scopeBloodSugarBeforeMeal, 2);
             }
 
-        } else if(bloodSugarBeforeMeal && '' !== bloodSugarBeforeMeal && 'before' === bloodSugar.get('bloodSugarMealFlag')) {
+        } else if(undefined !== bloodSugarBeforeMeal && '' !== bloodSugarBeforeMeal && 'before' === bloodSugar.get('bloodSugarMealFlag')) { // 공복만 선택의 경우
 
-            statusClassName = this.getStatusClassName(bloodSugarBeforeMeal, scopeBloodSugarBeforeMeal);
+            statusClassName = this.getStatusClassName(bloodSugarBeforeMeal, scopeBloodSugarBeforeMeal, 3);
 
-        } else if(bloodSugarAfterMeal && '' !== bloodSugarAfterMeal && 'after' === bloodSugar.get('bloodSugarMealFlag')) {
+        } else if(undefined !== bloodSugarAfterMeal && '' !== bloodSugarAfterMeal && 'after' === bloodSugar.get('bloodSugarMealFlag')) { // 식후만 선택의 경우
 
-            statusClassName = this.getStatusClassName(bloodSugarAfterMeal, scopeBloodSugarBeforeMeal);
+            statusClassName = this.getStatusClassName(bloodSugarAfterMeal, scopeBloodSugarBeforeMeal, 4);
 
         }
 

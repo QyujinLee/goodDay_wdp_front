@@ -10,6 +10,7 @@ import Shopping from 'components/Shopping';
 import ShoppingDetail from 'components/ShoppingDetail';
 import ShoppingGroupBuy from 'components/shoppingGroupBuy';
 
+import ShoppingRecommendContainer from 'containers/ShoppingRecommendContainer';
 
 import * as shoppingActions from 'modules/shopping';
 
@@ -33,20 +34,29 @@ class ShoppingContainer extends Component {
      * @returns {response}
      */
     getShoppingProductRecommendProcess() {
-
+        
+        const { ShoppingActions } = this.props;
+       
         const param = queryString.parse(window.location.search);
+
         param.randomYn = 'N';
+       
+        if (undefined !== param.ffmDt && undefined !== param.misnDtlSrno && undefined !== param.misnHstSrno) {
+            ShoppingActions.setShoppingDivision({
+                type: 'headerDivision',
+                data: 'shoppingRecommend'
+            });
+        }
 
         const getProductRecommend = this.getProductRecommendAPI(param);
 
         getProductRecommend.then((response) => {
-            const { ShoppingActions } = this.props;
 
             const responseData = response[0].data.data;
 
             ShoppingActions.setShoppingRecommend({
                 recommend: responseData
-            })
+            });
         })
 
     }
@@ -66,7 +76,7 @@ class ShoppingContainer extends Component {
         ShoppingActions.setShoppingProfile({
             type: 'information',
             data: utils.getUserInfo()
-        })
+        });
 
     }
 
@@ -80,7 +90,8 @@ class ShoppingContainer extends Component {
         const { ShoppingActions } = this.props;
 
         ShoppingActions.setShoppingDivision({
-            division: value
+            type: 'nextDivision',
+            data: value
         });
 
     }
@@ -109,30 +120,43 @@ class ShoppingContainer extends Component {
 
     render() {
 
-        const { myInfo, recommend, division } = this.props;
+        const { myInfo, recommend, division, headerDivision } = this.props;
 
         let shoppingArea = null;
 
         if ('' === division) {
-            shoppingArea = (
-                <Shopping
-                    myInfo={myInfo}
-                    onClickGoPage={this.handleClickGoPage}
-                    recommend={recommend} />
-            )
+            if ('shoppingRecommend' === headerDivision) {
+                shoppingArea = (
+                    <ShoppingRecommendContainer />
+                );
+            } else {
+                shoppingArea = (
+                    <Shopping
+                        myInfo={myInfo}
+                        onClickGoPage={this.handleClickGoPage}
+                        recommend={recommend}
+                        division={division} />
+                );
+            }
+
         } else if ('detail' === division) {
             shoppingArea = (
                 <ShoppingDetail
                     onClickGoPage={this.handleClickGoPage}
                     onClickBuy={this.handleClickBuy}
                 />
-            )
-        }else if('shoppingGroupBuy' === division) {
+            );
+        } else if ('shoppingGroupBuy' === division) {
             shoppingArea = (
                 <ShoppingGroupBuy
+                    division={division}
                     onClickGoPage={this.handleClickGoPage}
                 />
-            )
+            );
+        } else if ('shoppingRecommend' === division) {
+            shoppingArea = (
+                <ShoppingRecommendContainer />
+            );
         }
         return (
             <Fragment>
@@ -146,7 +170,8 @@ export default connect(
     (state) => ({
         myInfo: state.shopping.get('profile').get('information'),
         recommend: state.shopping.get('recommend'),
-        division: state.shopping.get('division'),
+        division: state.shopping.get('division').get('nextDivision'),
+        headerDivision: state.shopping.get('division').get('headerDivision')
     }),
     (dispatch) => ({
         ShoppingActions: bindActionCreators(shoppingActions, dispatch)

@@ -1,10 +1,11 @@
 import React, { Component, Fragment} from 'react';
+import SlideRuler from 'components/SlideRulerComponent';
 
 class RecordBloodSugar extends Component {
     render() {
 
         const { bloodSugar, inputType, mealYn, onChangeInputValue, onResetBloodSugarValue, 
-                onRecordBloodSugarScroll, onRecordBloodSugar, onMealYN, onClickRemoveBtn } = this.props;
+                onRecordBloodSugar, onMealYN, onClickRemoveBtn } = this.props;
 
         return (
             <Fragment>
@@ -91,37 +92,8 @@ class RecordBloodSugar extends Component {
                         <div className='value_tooltip'>
                             <span>{bloodSugar}</span>
                         </div>
-                        <div className='h_range_slider' onScroll={onRecordBloodSugarScroll}>
-                            <div className='range_measure' style={{'width':'5453px'}}>
-                                <ul className='measure_num' style={{'width':'5453px'}}>
-                                    <li>0</li>
-                                    <li>20</li>
-                                    <li>40</li>
-                                    <li>60</li>
-                                    <li>80</li>
-                                    <li>100</li>
-                                    <li>120</li>
-                                    <li>140</li>
-                                    <li>160</li>
-                                    <li>180</li>
-                                    <li>200</li>
-                                    <li>220</li>
-                                    <li>240</li>
-                                    <li>260</li>
-                                    <li>280</li>
-                                    <li>300</li>
-                                    <li>320</li>
-                                    <li>340</li>
-                                    <li>360</li>
-                                    <li>380</li>
-                                    <li>400</li>
-                                    <li>420</li>
-                                    <li>440</li>
-                                    <li>460</li>
-                                    <li>480</li>
-                                    <li>500</li>
-                                </ul>
-                            </div>     
+                        <div className='h_range_slider'>
+                            <SlideRuler currentValue={bloodSugar}/>
                         </div>
                         <span className='point'></span> 
                     </div>

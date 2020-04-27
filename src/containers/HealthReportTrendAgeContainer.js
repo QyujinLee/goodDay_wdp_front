@@ -1,9 +1,9 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { Chart } from 'react-chartjs-2';
 
 import * as utils from 'lib/utils';
 
-import LineChart from 'components/Chart/LineChart';
+import GradientLineChart from 'components/Chart/GradientLineChart';
 
 class HealthReportTrendAgeContainer extends Component {
 
@@ -44,7 +44,7 @@ class HealthReportTrendAgeContainer extends Component {
         data.forEach(element => {
 
             // color set
-            const chartInfo = utils.getLineChartInfo(element.jugNm);
+            const chartInfo = utils.getLineChartInfo(Number(element.lbdyAge) <= 0 ? '정상': '주의');
             lineData.borderColor.push(chartInfo.lineColor);
             lineData.pointBorderColor.push(chartInfo.lineColor);
             lineData.pointBackgroundColor.push(chartInfo.color);
@@ -52,7 +52,7 @@ class HealthReportTrendAgeContainer extends Component {
             lineData.pointHoverBorderColor.push(chartInfo.color);
 
             // data labels set
-            values.push(utils.numberFixed(element.calLbdyAge, true));
+            values.push(utils.numberFixed(element.lbdyAge, true));
             customData.labels.push(utils.momentDateFormat(element.mediExamDt));
         });
 
@@ -132,24 +132,40 @@ class HealthReportTrendAgeContainer extends Component {
                         });
                     });
                 }
+            },
+            annotation: {
+                annotations: []
             }
         };
 
-        const values = [];
-        // 수치 데이터
-        data.forEach(element => {
-            values.push(element.calLbdyAge);
-        });
+        // 차트 Y축 min, max 범위 계산
+        const values = data.map(o => Number(o.lbdyAge));
+        const negativeMinValueOrZero = Math.min(...values, 0);
+        const positiveMaxValueOrZero = Math.max(...values, 0);
+        const adjustment = (positiveMaxValueOrZero - negativeMinValueOrZero) / 2;
+        
+        // 차트 Y축 min, max 범위 설정
+        options.scales.yAxes[0].ticks.min = negativeMinValueOrZero - adjustment;
+        options.scales.yAxes[0].ticks.max = positiveMaxValueOrZero + adjustment;
 
-        const minValue = Math.min.apply(null, values);
-        const maxValue = Math.max.apply(null, values);
-        const gapValue = (maxValue - minValue) / 2;
-        //const stepValue = Math.floor((maxValue - minValue) / data.length);
-
-        //ticks min, max, stepSize set
-        options.scales.yAxes[0].ticks.min = minValue - gapValue;
-        options.scales.yAxes[0].ticks.max = maxValue + gapValue;
-        //options.scales.yAxes[0].ticks.stepSize = stepValue;
+        // 차트 횡방향 기준선
+        options.annotation.annotations = [{
+                type: 'line',
+                mode: 'horizontal',
+                scaleID: 'y-axis-0',
+                value: 0,
+                borderColor: 'rgb(192, 192, 192)',
+                borderWidth: 1,
+                borderDash: [6, 6],
+                label: {
+                    yAdjust: -10,
+                    backgroundColor: 'rgba(0, 0, 0, 0)',
+                    fontColor: 'rgba(192, 192, 192)',
+                    content: '실제나이',
+                    position: 'left',
+                    enabled: true
+                }
+        }];
 
         return options;
     }
@@ -168,39 +184,14 @@ class HealthReportTrendAgeContainer extends Component {
                         {
                             0 < livingAge.length ? livingAge.map((item, index) => {
 
-                                const length = item.data.length;
-                                let gapAge = 0;
-                                let gapBodyAge = 0;
-
-                                if (1 < length) {
-                                    gapAge = utils.numberFixed(item.data[length - 1].calLbdyAge - item.data[0].calLbdyAge, true);
-                                    gapBodyAge = utils.numberFixed(utils.TrendgapDate(item.data[0].calLbdyAge, item.data[0].lbdyAge, item.data[length - 1].calLbdyAge, item.data[length - 1].lbdyAge), true);
-                                }
-
                                 return (
                                     <div key={index} className='graph_bx'>
                                         <div className='standard'><span className='txt'>{item.lbdyAgeDivCdNm}</span></div>
                                         <div className='result_set'>
-                                            {
-                                                1 < length ? (
-                                                    <Fragment>
-                                                        <strong className="age_txt">
-                                                            <span className="txt">실제 나이</span>
-                                                            <span className={utils.getTrendValueClass(gapBodyAge).age}> {gapBodyAge}세</span>
-                                                            <em className={utils.getTrendValueClass(gapBodyAge).calculation}>{utils.getTrendValueClass(gapBodyAge).direction}</em>
-                                                        </strong>
-                                                        <strong className="age_txt">
-                                                            <span className="txt">{item.lbdyAgeDivCdNm}</span>
-                                                            <span className={utils.getTrendValueClass(gapAge).age}> {gapAge}세</span>
-                                                            <em className={utils.getTrendValueClass(gapAge).calculation}>{utils.getTrendValueClass(gapAge).direction}</em>
-                                                        </strong>
-                                                    </Fragment>
-                                                ) : null
-                                            }
                                             <div className='line_chart'>
                                                 <div className='chart' style={{ width: utils.getLineChartWidth(item.data.length) + 'px' }}>
-                                                    <LineChart
-                                                        data={this.setLineChartData(item.data)}
+                                                    <GradientLineChart
+                                                        lineData={this.setLineChartData(item.data)}
                                                         options={this.setLineChartOption(item.data)}
                                                     />
                                                 </div>

@@ -34,7 +34,7 @@ export function extApp(code, param) {
     } else {// app가 연결되지 않았을 경우
         if (code === '01') {
             return {
-                usrId: 'hiyun',
+                usrId: 'kjlee',
                 usrNm: '윤현일',
                 nickNm: '현일',
                 brthDt: '19780119',
