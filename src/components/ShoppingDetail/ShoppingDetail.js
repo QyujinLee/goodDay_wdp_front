@@ -38,8 +38,7 @@ class ShoppingDetail extends Component {
                             <span className='origin'>비타민하우스</span>
                             <span className='name'>파이토 멀티비타민 포우먼</span>
                             <div className='score_stars'><i className='stars'></i><span className='reply'>리뷰 <em className='num'>3,901</em>건</span></div>
-                            <p className='price_num'><b className='price'>23,000</b><span>원</span><span className='cut'><em>25000</em>
-                    원</span></p>
+                            <p className='price_num'><b className='price'>24,250</b><span>원</span><span className='cut'><em>25000</em> 원</span></p>
                             <dl className='lv_benefit_bx'>
                                 <dt>등급혜택 <span className='lv_num'>Level1</span></dt>
                                 <dd>
@@ -103,7 +102,7 @@ class ShoppingDetail extends Component {
                                             <li>
                                                 <a href='#!'>
                                                     <div className='img_box'>
-                                                        <img src='images/img_shop_list_01.png' alt='' />
+                                                        <img src='images/img_shop_medi_01.png' alt='' />
                                                     </div>
                                                     <span>
                                                         파이토 멀티비타민 포우먼
@@ -116,17 +115,17 @@ class ShoppingDetail extends Component {
                                                         <img src='images/img_shopping_02.png' alt='' />
                                                     </div>
                                                     <span>
-                                                        피쉬콜라겐
+                                                        가벼운 오늘
                               </span>
                                                 </a>
                                             </li>
                                             <li>
                                                 <a href='#!'>
                                                     <div className='img_box'>
-                                                        <img src='images/img_shopping_02.png' alt='' />
+                                                    <img src='images/img_shop_list_08.png' alt='' />
                                                     </div>
                                                     <span>
-                                                        멀티프로 멀티비타민 우먼플러스
+                                                    파이토 마그네슘 B6
                               </span>
                                                 </a>
                                             </li>

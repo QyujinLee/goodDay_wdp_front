@@ -17,7 +17,7 @@ class HealthReportDetailView extends Component {
             if (1 === index) {
                 if (ServiceConstants.REF_NCL_DIV_CD_CAUTION === item.refNclDivCd) {
                  
-                    if (firstValue > secondValue) {
+                    if (Number(firstValue) > Number(secondValue)) {
                         firstValue = item.endVal;
                         secondValue = item.strVal;
                     } else {

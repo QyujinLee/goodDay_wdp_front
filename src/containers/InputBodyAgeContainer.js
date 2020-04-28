@@ -515,7 +515,6 @@ class InputBodyAgeContainer extends Component {
     handleChangeInputValue = (e) => {
 
         const { InputBodyAgeActions, inputBodyAge } = this.props;
-        let range = '';
         let value = document.getElementsByClassName('inp_txt')[0].value;
 
         if (e.target.classList.contains('height')) {
@@ -527,9 +526,6 @@ class InputBodyAgeContainer extends Component {
                 height: value
             });
 
-            // 허용치 정의
-            range = utils.getBodyAgeValueRange('height');
-
         } else if (e.target.classList.contains('bodyWeight')) {
 
             value = utils.validBodyAgeFloat('bodyWeight', inputBodyAge.get('bodyWeight'), e); // 유효성 검사
@@ -538,9 +534,6 @@ class InputBodyAgeContainer extends Component {
             InputBodyAgeActions.setInputBodyAgeWeight({
                 bodyWeight: value
             });
-
-            // 허용치 정의
-            range = utils.getBodyAgeValueRange('bodyWeight');
 
         } else if (e.target.classList.contains('waistCircum')) {
 
@@ -551,9 +544,6 @@ class InputBodyAgeContainer extends Component {
                 waistCircum: value
             });
 
-            // 허용치 정의
-            range = utils.getBodyAgeValueRange('waistCircum');
-
         } else if (e.target.classList.contains('hipCircum')) {
 
             value = utils.validBodyAgeInteger(value, 'hipCircum'); // 유효성 검사
@@ -562,15 +552,9 @@ class InputBodyAgeContainer extends Component {
             InputBodyAgeActions.setInputBodyAgeHip({
                 hipCircum: value
             });
-
-            // 허용치 정의
-            range = utils.getBodyAgeValueRange('hipCircum');
             
         }
 
-        if(Number(value) >= range.min && Number(value) <= range.max ){
-            document.querySelector('.h_range_slider').scrollLeft = utils.getScrollPosition(value);
-        }
     }
 
     /**
@@ -594,111 +578,6 @@ class InputBodyAgeContainer extends Component {
     
         clearTimeout(this.scrollTimer);
         this.scrollTimer = setTimeout(function() {
-            active = false;
-            this.activeRuler(active);
-        }.bind(this), 250);
-        active = true;
-    }
-
-    scrollTimer = null;
-    /**
-     * 건강검진 비만 체형 나이 스크롤
-     * @param e
-     * @returns {void}
-     */
-    handleBodyAgeScroll = e => {
-
-        let scrollType = '';
-
-        if (e.target.parentNode.classList.contains('height')) {
-            scrollType = 'height';
-        } else if (e.target.parentNode.classList.contains('weight')) {
-            scrollType = 'weight';
-        } else if (e.target.parentNode.classList.contains('waist')) {
-            scrollType = 'waist';
-        } else if (e.target.parentNode.classList.contains('hip')) {
-            scrollType = 'hip';
-        }
-
-        let num = 0;
-        let active = true; //현재 스크롤여부
-        const nowScroll = e.target.scrollLeft;
-        
-        if ('height' === scrollType) {
-            
-            const range = utils.getBodyAgeValueRange('height');
-            const startX = utils.getScrollPosition(130); //초기 화면 스크롤시작값
-
-            if(utils.getValueByScrollPosition(nowScroll) > range.max) {
-                document.querySelector('.h_range_slider').scrollLeft = utils.getScrollPosition(range.max)
-            } else if(utils.getValueByScrollPosition(nowScroll) < range.min){
-                document.querySelector('.h_range_slider').scrollLeft = utils.getScrollPosition(range.min)
-            } else {
-
-                if (nowScroll > startX) {
-                    num = nowScroll - startX;
-                } else {
-                    num = startX - nowScroll;
-                }
-
-                this.changeCharacterHeight(nowScroll, num);
-                this.moveScroll(nowScroll, scrollType);
-            }
-
-        } else if ('weight' === scrollType) {
-            
-            
-
-            const range = utils.getBodyAgeValueRange('bodyWeight');
-
-            if(utils.getValueByScrollPosition(nowScroll) > range.max) {
-                document.querySelector('.h_range_slider').scrollLeft = utils.getScrollPosition(range.max)
-            } else if(utils.getValueByScrollPosition(nowScroll) < range.min){
-                document.querySelector('.h_range_slider').scrollLeft = utils.getScrollPosition(range.min)
-            } else {
-
-                this.changeCharacterWeight(nowScroll);
-                this.moveScroll(nowScroll, scrollType);
-
-            }
-
-        } else if ('waist' === scrollType) {
-
-            const range = utils.getBodyAgeValueRange('waistCircum');
-
-            if(utils.getValueByScrollPosition(nowScroll) > range.max) {
-                document.querySelector('.h_range_slider').scrollLeft = utils.getScrollPosition(range.max)
-            } else if(utils.getValueByScrollPosition(nowScroll) < range.min){
-                document.querySelector('.h_range_slider').scrollLeft = utils.getScrollPosition(range.min)
-            } else {
-
-                this.changeCharacterWaist(nowScroll);
-                this.moveScroll(nowScroll, scrollType);
-
-            }
-
-        } else if ('hip' === scrollType) {
-
-            const range = utils.getBodyAgeValueRange('hipCircum');
-
-            if(utils.getValueByScrollPosition(nowScroll) > range.max) {
-                document.querySelector('.h_range_slider').scrollLeft = utils.getScrollPosition(range.max)
-            } else if(utils.getValueByScrollPosition(nowScroll) < range.min){
-                document.querySelector('.h_range_slider').scrollLeft = utils.getScrollPosition(range.min)
-            } else {
-
-                this.changeCharacterHip(nowScroll);
-                this.moveScroll(nowScroll, scrollType);
-
-            }
-
-        }
-
-        this.activeRuler(active);
-
-        clearTimeout(this.scrollTimer);
-
-        this.scrollTimer = setTimeout(function () {
             active = false;
             this.activeRuler(active);
         }.bind(this), 250);
@@ -886,55 +765,7 @@ class InputBodyAgeContainer extends Component {
         tapeLine.style.marginLeft = marginLeft + 'px';
 
     }
-    /**
-     * 건강검진 비만 체형 나이 값
-     * @param nowScroll
-     * @returns {void}
-     */
-    moveScroll(nowScroll, scrollType){
-        const { InputBodyAgeActions, inputBodyAge } = this.props;
 
-        const curCm = utils.getValueByScrollPosition(nowScroll);
-
-        if ('height' === scrollType) {
-
-            if(Math.abs(inputBodyAge.get('height') - curCm) > 0.1){
-                // 신장 값 set
-                InputBodyAgeActions.setInputBodyAgeHeight({
-                    height: curCm.toFixed(1)
-                });
-            }
-
-        } else if ('weight' === scrollType) {
-
-            if(Math.abs(inputBodyAge.get('bodyWeight') - curCm) > 0.1){
-                // 체중 값 set
-                InputBodyAgeActions.setInputBodyAgeWeight({
-                    bodyWeight: curCm.toFixed(1)
-                });
-            }
-
-        } else if ('waist' === scrollType) {
-
-            if(Math.abs(inputBodyAge.get('waistCircum') - curCm) > 0.1){
-                // 허리둘레 값 set
-                InputBodyAgeActions.setInputBodyAgeWaist({
-                    waistCircum: curCm.toFixed(0)
-                });
-            }
-            
-        } else if ('hip' === scrollType) {
-
-            if(Math.abs(inputBodyAge.get('hipCircum') - curCm) > 0.1){
-                // 엉덩이둘레 값 set
-                InputBodyAgeActions.setInputBodyAgeHip({
-                    hipCircum: curCm.toFixed(0)
-                });
-            }
-
-        }
-    }
-    
     /**
      * 건강검진 비만 체형 나이 포인트
      * @param nowScroll

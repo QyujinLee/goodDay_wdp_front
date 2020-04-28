@@ -20,7 +20,7 @@ class MoreMenu extends Component {
                     <li className='m_invite'><a href='#!'><span>초대하기</span></a></li>
                     <li className='m_product'><a href='#!' onClick={() => onClickGoPage('product')}><span>Plus상품</span></a></li>
                     <li className='m_mydata'><a href='#!'  onClick={() => onClickGoPage('myDataHistory')}><span>My Data</span></a></li>
-                    <li className='m_security'><a href='#!'><span>공인인증센터</span></a></li>
+                    <li className='m_poc'><a href='#!'  onClick={() => onClickGoPage('ourMission')}><span>우리의 미션</span></a></li>
                 </ul>
             </div>
         )

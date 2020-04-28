@@ -264,8 +264,8 @@ class ReportContainer extends Component {
      */
     handleHealthReportHeaderTab = (e) => {
 
-        const { HealthReportContentsActions } = this.props;
-        const target = e.target.getAttribute('type');
+        const { HealthReportContentsActions} = this.props;
+        const target = e.currentTarget.getAttribute('type');
 
         if ('History' === target) {
 
@@ -274,11 +274,11 @@ class ReportContainer extends Component {
                 type: 'mediExamGrpId',
                 data: ''
             });
-        }
+        } 
 
         // 헤더 Redux set
         HealthReportContentsActions.setHealthReportHeaderTab({
-            headerTab: e.target.getAttribute('type')
+            headerTab: target
         });
     };
 
@@ -292,7 +292,7 @@ class ReportContainer extends Component {
         const { BodyAgeActions } = this.props;
 
         BodyAgeActions.setBodyAgeHeaderTab({
-            headerTab: e.target.getAttribute('type')
+            headerTab: e.currentTarget.getAttribute('type')
         })
 
     };
@@ -304,7 +304,7 @@ class ReportContainer extends Component {
    */
     handleHealthReportContentsToggle = (e) => {
 
-        let  targetElement = e.target.parentElement;
+        let targetElement = e.target.parentElement;
 
         if (targetElement.classList.contains('title_set')) {
             targetElement = targetElement.parentElement;

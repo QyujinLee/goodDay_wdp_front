@@ -16,6 +16,7 @@ import MoreMyDataCancel from 'components/MoreMyDataCancel';
 import MoreMembershipLevel from 'components/MoreMembershipLevel';
 import MoreShoppingHistory from 'components/MoreShoppingHistory';
 import MoreMissionBankBook from 'components/MoreMissionBankBook';
+import MoreOurMission from 'components/MoreOurMission';
 
 import MoreMissionContainer from 'containers/MoreMissionContainer';
 
@@ -161,6 +162,7 @@ class MoreContainer extends Component {
             parentElement[i].classList.remove('on');
         }
         document.getElementsByClassName('my_tab_conts ' + showContents)[0].style.display = 'block';
+       
         if (targetElement.classList.contains('on')) {
 
             targetElement.classList.remove('on');
@@ -169,6 +171,26 @@ class MoreContainer extends Component {
             targetElement.classList.add('on');
         }
     }
+
+    /** 
+    * 우리의미션 클래스 제어
+    * @param e
+    * @returns {void}
+    */
+    handleClickOurMissionToggle = e => {
+
+        e.preventDefault();
+        const targetElement = e.target.parentNode;
+       
+        if (targetElement.classList.contains('on')) {
+
+            targetElement.classList.remove('on');
+
+        } else {
+            targetElement.classList.add('on');
+        }
+    }
+
 
 
 
@@ -252,6 +274,13 @@ class MoreContainer extends Component {
                 <MoreMissionBankBook
                     myInfo={information}
                     myPoint={point}
+                    onClickGoPage={this.handleClickGoPage}
+                />
+            )
+        }else if ('ourMission' === division) {
+            myProfileArea = (
+                <MoreOurMission 
+                    onClickToggle={this.handleClickOurMissionToggle}
                     onClickGoPage={this.handleClickGoPage}
                 />
             )

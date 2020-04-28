@@ -34,7 +34,7 @@ export function extApp(code, param) {
     } else {// app가 연결되지 않았을 경우
         if (code === '01') {
             return {
-                usrId: 'kjlee',
+                usrId: 'hiyun',
                 usrNm: '윤현일',
                 nickNm: '현일',
                 brthDt: '19780119',
@@ -82,6 +82,8 @@ window.extWeb = (code, param) => {
             case '05':
                 if(document.getElementsByClassName('arrow_lft').length !== 0){ // 화면에 뒤로가기 버튼이 있을 경우 클릭 이벤트 발생
                     (document.getElementsByClassName('arrow_lft')[0]).click();
+                } else if(document.getElementsByClassName('close_btn').length !== 0) { // 화면에 닫기 버튼이 있을 경우 클릭 이벤트 발생
+                    (document.getElementsByClassName('close_btn')[0]).click();
                 } else { // 뒤로가기 버튼이 없을 경우 앱에 종료 이벤트 전달
                     extApp('02');
                 }

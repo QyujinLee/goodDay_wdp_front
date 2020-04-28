@@ -16,9 +16,11 @@ class BodyAgeHeader extends Component {
                         'Detail' === headerTab ? (
                             <>
                                 <h1>비만체형나이</h1>
-                                <ul className='tab_cir'>
-                                    <li className='tab02'><a href='#!' onClick={onhandleBodyAgeHeaderTab} type={'Trend'}> </a></li>
-                                </ul>
+                                <div className='right_btn'>
+                                    <a href='#!' className='bt_line ico_graph' onClick={onhandleBodyAgeHeaderTab} type={'Trend'}>
+                                    <span>추이그래프</span> 
+                                    </a>
+                                </div>
                             </>
                         ) : (
                                 <>

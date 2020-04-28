@@ -440,41 +440,9 @@ export function getLevelDiscountAccumulation(levelData, division) {
 }
 
 /**
- * 체중, 키, 허리둘레, 엉덩이 둘레, 혈당, 혈압 입력시 입력된 값을 통해 스크롤 위치를 알아온다.
- * @param value 입력된 값
- * @param num 한 격자당 값
- * @return 스크롤 위치
- * 
+ * 각 입력 항목에 따른 기본값을 반환
+ * @param type 스크롤타입
  */
-export function getScrollPosition(value, num) {
-    num = num === undefined ? 0.2 : num;
-    const baseWidth = 371;
-    const slider = document.querySelector('.h_range_slider');
-    const sliderWidth = slider.offsetWidth;
-    const gab = (baseWidth - Number(sliderWidth)) / 2;
-    
-    const scrollLeft = value / num + gab;
-
-    return scrollLeft;
-}
-/**
- * 체중, 키, 허리둘레, 엉덩이 둘레, 혈당, 혈압 입력시 스크롤 위치에 따라 값을 알아온다.
- * @param nowScroll 스크롤 위치
- * @param num 한 격자당 값
- * @return 값
- */
-export function getValueByScrollPosition(nowScroll, num){
-    num = num === undefined ? 0.2 : num;
-    // num = 0.2;
-    const baseWidth = 371;
-    const slider = document.querySelector('.h_range_slider');
-    const sliderWidth = slider.offsetWidth;
-    const gab = (baseWidth - Number(sliderWidth)) / 2;
-    let curCm = 0;
-    if(nowScroll - gab <= 0)curCm = 0;
-    else curCm = (nowScroll - gab) * num;
-    return curCm
-}
 export function getBodyAgeDefaultValue(type){
     const gender = android.extApp('01').gndrDivCd;
     let defaultValue = 0;
@@ -516,6 +484,7 @@ export function getBodyAgeDefaultValue(type){
 
     return defaultValue;
 }
+
 /**
  * 체중, 키, 허리둘레, 엉덩이 둘레, 혈당, 혈압 등의 값 범위
  * @param nowScroll 종류

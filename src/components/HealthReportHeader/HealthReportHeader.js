@@ -9,10 +9,10 @@ class HealthReportHeader extends Component {
 
         let healthReportHeaderTabArea = null;
 
-        if ('History' === headerTab || 'Detail' === headerTab) {
-            healthReportHeaderTabArea = <li className='tab02'><a href='#!' onClick={onHealthReportHeaderTab} type={'Trend'}> </a></li>;
+        if ('History' === headerTab || 'Detail' === headerTab ) {
+            healthReportHeaderTabArea = <a href='#!' className='bt_line ico_graph' onClick={onHealthReportHeaderTab} type={'Trend'}><span> 추이 그래프</span></a>; 
         }
-
+        
         return (
             <header className='header'>
                 <div className='title_set'>
@@ -20,9 +20,9 @@ class HealthReportHeader extends Component {
                     {'History' === headerTab ? <h1>총 {historyCount}건의 건강검진 기록</h1> : null}
                     {'Detail' === headerTab ? <h1>검진 상세</h1> : null}
                     {'Trend' === headerTab ? <h1>추이 그래프</h1> : null}
-                    <ul className='tab_cir'>
+                    <div className='right_btn'>
                         {healthReportHeaderTabArea}
-                    </ul>
+                    </div>
                 </div>
             </header>
         );
