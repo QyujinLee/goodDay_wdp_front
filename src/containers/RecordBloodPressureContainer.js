@@ -40,6 +40,8 @@ class RecordBloodPressureContainer extends Component {
         }
     }
 
+    scrollTimer1 = null;
+    scrollTimer2 = null;
     /**
      * 스크롤 제어
      * @param scrollType
@@ -47,15 +49,35 @@ class RecordBloodPressureContainer extends Component {
     handleScroll = (scrollType) => {
 
         let active = true;
+        let point = '';
 
-        this.activeRuler(active, scrollType);
+        if('systolic' === scrollType) {
+            point = document.querySelectorAll('.value_scroll .point')[0];
+
+            this.activeRuler(active, point);
     
-        clearTimeout(this.scrollTimer);
-        this.scrollTimer = setTimeout(function() {
-            active = false;
-            this.activeRuler(active, scrollType);
-        }.bind(this), 250);
-        active = true;
+            clearTimeout(this.scrollTimer1);
+            this.scrollTimer1 = setTimeout(function() {
+                active = false;
+                this.activeRuler(active, point);
+            }.bind(this), 250);
+            active = true;
+
+        } else if ('diastolic' === scrollType) {
+            point = document.querySelectorAll('.value_scroll .point')[1];
+
+            this.activeRuler(active, point);
+    
+            clearTimeout(this.scrollTimer2);
+            this.scrollTimer2 = setTimeout(function() {
+                active = false;
+                this.activeRuler(active, point);
+            }.bind(this), 250);
+            active = true;
+
+        }
+
+        
     }
 
     /**
@@ -64,14 +86,7 @@ class RecordBloodPressureContainer extends Component {
      * @param scrollType
      * @returns {void}
      */
-    activeRuler(active, scrollType) {
-
-        let point = ''
-        if('systolic' === scrollType) {
-            point = document.querySelectorAll('.value_scroll .point')[0];
-        } else if ('diastolic' === scrollType) {
-            point = document.querySelectorAll('.value_scroll .point')[1];
-        }
+    activeRuler(active, point) {
 
         if (active) {
             point.classList.add('active');

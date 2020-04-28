@@ -156,3 +156,9 @@ export const SHOPPING_CTGID_HEALTH_FOOD                  = '026002'; //건강식
 export const SHOPPING_CTGID_MEDITATION                   = '026003'; //명상
 export const SHOPPING_CTGID_DIET                         = '026004'; //식단
 export const SHOPPING_CTGID_EXERCISE                     = '026005'; //운동
+
+/**
+ * 문진
+ */
+export const MIND_EXAM_QUST_ITM_TYP_DIV_CD_MELANCHOLY    = '020003'; // 우울
+export const MIND_EXAM_QUST_ITM_TYP_DIV_CD_ANXIETY       = '020004'; // 불안

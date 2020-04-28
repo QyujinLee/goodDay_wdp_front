@@ -37,6 +37,7 @@ class RecordBodyWeightContainer extends Component {
         }
     }
 
+    scrollTimer = null;
     /**
      * 스크롤 제어
      */

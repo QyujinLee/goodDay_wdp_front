@@ -1,7 +1,9 @@
 import React, { Component  } from 'react';
 import { Link } from 'react-router-dom';
 import ReactHtmlParser from 'react-html-parser'; 
+
 import * as utils from 'lib/utils';
+import * as ServiceConstants from 'constants/serviceConstants';
 
 class MindExamResult extends Component {
 
@@ -15,6 +17,25 @@ class MindExamResult extends Component {
         const {rsltData, mindState} = this.props;
         let stateImgClass, stateText, advice;
         const usrInfo = utils.getUserInfo();
+
+        let melancholy, anxiety = false;
+        const filterRsltData = [];
+        
+        // 우울 불안 필터(둘다 3점 이하 일때)
+        null != rsltData && rsltData.forEach(element => {
+
+            if (melancholy && anxiety) {
+                return;
+            }
+            if (ServiceConstants.MIND_EXAM_QUST_ITM_TYP_DIV_CD_MELANCHOLY === element.qustItmTypDivCd && Number(element.score) < 3) {
+                melancholy = true;
+            }
+            if (ServiceConstants.MIND_EXAM_QUST_ITM_TYP_DIV_CD_ANXIETY === element.qustItmTypDivCd && Number(element.score) < 3) {
+                anxiety = true;
+            }
+
+            filterRsltData.push(element);
+        });
 
         if(mindState === 'normal') {
             stateImgClass = 'my_state normal';
@@ -65,8 +86,8 @@ class MindExamResult extends Component {
                         <h3>세부검사 결과</h3>                            
                         <ul className="result_lst">
                         {
-                            rsltData === null ? '' :
-                            rsltData.map((item, index) => (
+                            filterRsltData === null ? '' :
+                            filterRsltData.map((item, index) => (
                                 <li key={index}>
                                     <span className="s_tit">{item.qustItmTypDivCdNm} 검사결과</span>
                                     <p>{ReactHtmlParser(item.guidDesc)}</p>

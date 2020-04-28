@@ -30,11 +30,11 @@ class BodyAgeDetailViewContainer extends Component {
 
     }
     render() {
-        const { layout, normalScope, detail ,selectDate } = this.props;
+        const { layout, normalScope, detail, selectDate } = this.props;
         const { onBodyAgeToggle } = this.props;
 
         const dateLength = selectDate.length;
-        const diffYear = utils.diffDate(selectDate[dateLength-1].msmtDt,selectDate[0].msmtDt,'year')+ 1;
+        const diffYear = utils.yearDiff(selectDate[dateLength - 1].msmtDt, selectDate[0].msmtDt, 'year') + 1;
 
         return (
             <ul className='detail_set'>

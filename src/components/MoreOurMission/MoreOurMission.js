@@ -14,7 +14,7 @@ class MoreOurMission extends Component {
         const { onClickToggle, onClickGoPage } = this.props;
 
         return (
-            <div className='wrap_app'>
+            <div className='wrap_app gray'>
 
                 <header className='header'>
                     <div className='title_set'>

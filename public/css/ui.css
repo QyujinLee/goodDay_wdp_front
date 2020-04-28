@@ -1297,8 +1297,9 @@ html, body{height:100%;}
 .link_order + .btn_more_wrap{margin-top:30px;}
 
 /*우리의 미션*/
-.wdp_mission_wrap{position:absolute;top:62px;left:0px;height:100%;padding:20px;background-color:#f4f4f4;box-sizing:border-box;}
-.wdp_mission_wrap .wdp_mission_lst{margin-top:15px;}
+.wrap_app.gray{background-color:#f4f4f4;}
+.wdp_mission_wrap{width:100%;height:100%;padding:20px;background-color:#f4f4f4;box-sizing:border-box;}
+.wdp_mission_wrap .wdp_mission_lst{margin-top:15px;background-color:#f4f4f4;}
 .wdp_mission_wrap .wdp_mission_lst > li{margin-top:20px;height:80px;border:1px solid #fff;border-radius:49px;background-color:#fff;box-shadow: 4px 5px 0px 0px  rgba(0, 0, 0, .12);}
 .wdp_mission_wrap .wdp_mission_lst > li:first-child{margin-top:0px;}
 .wdp_mission_wrap .wdp_mission_lst > li a{position:relative;display:block;padding-left:44px;color:#000;font-size:24px;box-sizing:border-box;line-height:80px;}

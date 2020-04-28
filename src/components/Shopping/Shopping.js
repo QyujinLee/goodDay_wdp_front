@@ -229,7 +229,7 @@ class Shopping extends Component {
                                         <div className='info_pro'>
                                             <span className='origin'>비타민하우스</span>
                                             <span className='name'>파이토 멀티비타민 포우먼</span>
-                                            <p className='price_num'>23,000<span className='cut'><em>25,000</em>원</span></p>
+                                            <p className='price_num'>24,250<span className='cut'><em>25,000</em>원</span></p>
                                             <span className='point_discount'>
                                                 포인트 <b>750P</b> 할인
                                             </span>

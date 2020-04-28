@@ -69,6 +69,10 @@ export function diffDate(fromDate, toDate, division) {
     return moment(toDate, 'YYYYMMDD').diff(moment(fromDate, 'YYYYMMDD'), division, false);
 }
 
+export function yearDiff(fromDate, toDate) {
+    return toDate.substring(0, 4) - fromDate.substring(0, 4);
+}
+
 /**
  * 연도에 따른 한국나이 계산
  * @param {string} birth

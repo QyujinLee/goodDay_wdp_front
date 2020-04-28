@@ -557,6 +557,7 @@ class InputBodyAgeContainer extends Component {
 
     }
 
+    scrollTimer = null;
     /**
      * 스크롤 제어
      */

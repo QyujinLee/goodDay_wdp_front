@@ -97,12 +97,12 @@ class HealthReportDetailViewContainer extends Component {
 
     render() {
 
-        const { layout, normalScope, detail ,selectDate} = this.props; // props data
+        const { layout, normalScope, detail, selectDate } = this.props; // props data
         const { onHealthReportContentsToggle } = this.props; // props event
 
         const dateLength = selectDate.length;
-        const diffYear = utils.diffDate(selectDate[dateLength-1].mediExamDt,selectDate[0].mediExamDt,'year')+ 1;
-       
+        const diffYear = utils.yearDiff(selectDate[dateLength - 1].mediExamDt, selectDate[0].mediExamDt, 'year') + 1;
+
         return (
             <ul className={'detail_set' + utils.getToggleFocusClass(layout.goalDissDivCd)}>
                 <li className='tit'>
